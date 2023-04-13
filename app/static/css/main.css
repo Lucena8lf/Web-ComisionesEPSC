@@ -1,0 +1,43 @@
+body {
+    background: #eacda3;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #d6ae7b, #eacda3);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #d6ae7b, #eacda3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.container {
+    margin-top: 50px;
+}
+
+.box {
+    height: 100px;
+    width: 100px;
+    margin: 10px;
+    background-color: #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.panel {
+    background-color: #eee;
+    padding: 10px;
+    min-height: 100px;
+}
+
+#submit {
+    margin-right: 10px;
+}
+
+.member-button {
+    float: right;
+}
+
+#iframe-index {
+    width: 100%;
+    height: 100%;
+}
+
+#info {
+    height: 100%;
+}

@@ -1,0 +1,52 @@
+{% extends "base_template.html" %}
+
+{% block title %} Inicio {% endblock %}
+
+{% block content %}
+<div class="container">
+    <!--
+    {% with messages = get_flashed_messages()  %}
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+    -->
+    <h1 class="display-4 text-center title"> Gestor de comisiones EPSC</h1>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-12 mb-2" id="miembros">
+                    <a href="{{ url_for('miembro.get_miembros') }}" class="box btn btn-light btn-block">Comisiones</a>
+                </div>
+                <div class="col-12 mb-2">
+                    <a href="{{ url_for('miembro.get_miembros') }}" class="box btn btn-light btn-block">Miembros</a>
+                </div>
+                <div class="col-12 mb-2">
+                    <a href="{{ url_for('comision.comisiones') }}" class="box btn btn-light btn-block">Informes</a>
+                </div>
+                <div class="col-12">
+                    <a href="{{ url_for('comision.comisiones') }}" class="box btn btn-light btn-block">Exportar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="panel card mt-4 h-75">
+                <div class="card-body">
+                    <div id="info">
+                        <p class="card-text" id="texto-index">Seleccione un cuadro para ver su información</p>
+                        <iframe id="iframe-index" src="" frameborder="0" style="width: 100%; height: 100%;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{url_for('static', filename='js/index.js')}}"></script>
+{% endblock %}

@@ -1,0 +1,32 @@
+.form-check.form-switch {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+  }
+
+.contenedor-miembro {
+    /* Para el botón de añadir */
+    overflow: auto;
+}
+
+.add-svg {
+    float: right;
+    margin-bottom: 1.5rem;
+}
+
+.nombre-miembro {
+    margin-left: 0.5rem;
+    margin-right: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.svg-miembro {
+    margin-left: 0rem;
+    margin-right: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.switch-miembro {
+    margin-left: 1.5rem;
+    margin-top: 0.2rem;
+}
