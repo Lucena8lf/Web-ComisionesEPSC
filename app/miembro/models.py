@@ -10,11 +10,10 @@ import re
 
 # print("importing models from", __name__)
 
+# Cambiar de dni_miembro a id_miembro
 miembros_comisiones = db.Table(
     "miembros_comisiones",
-    db.Column(
-        "dni_miembro", db.String(20), db.ForeignKey("miembro.dni"), primary_key=True
-    ),
+    db.Column("id_miembro", db.Integer, db.ForeignKey("miembro.id"), primary_key=True),
     db.Column(
         "id_comision", db.Integer, db.ForeignKey("comision.id"), primary_key=True
     ),
@@ -44,7 +43,7 @@ class Miembro(db.Model):
     comisiones = db.relationship(
         "Comision",
         secondary=miembros_comisiones,
-        backref=db.backref("miembros", lazy="dynamic"),
+        back_populates="miembros",
     )
     # La opción secondary indica la tabla de relación que se utilizará para establecer la relación.
     # La opción backref agrega una propiedad "miembros" en la clase "Comision" que te
@@ -94,4 +93,4 @@ class Miembro(db.Model):
         """
         Método para obtener un miembro a partir de su dni
         """
-        return Miembro.query.get(dni)
+        return Miembro.query.filter_by(dni=dni).first()

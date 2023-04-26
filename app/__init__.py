@@ -10,6 +10,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 
+from app.common.filters import format_datetime
+
 
 login_manager = LoginManager()
 db = SQLAlchemy()
@@ -38,7 +40,10 @@ def create_app():
     login_manager.init_app(app)
 
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, render_as_batch=True)
+
+    # Registramos los filtros
+    register_filters(app)
 
     # Registramos todos los Blueprints que tengamos
     from .miembro import miembro_bp
@@ -69,3 +74,10 @@ def create_app():
     #    db.create_all()
 
     return app
+
+
+def register_filters(app):
+    """
+    Función que registra la función format_datetime() como filtro de Jinja2
+    """
+    app.jinja_env.filters["datetime"] = format_datetime

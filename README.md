@@ -43,6 +43,9 @@ Se han utilizado las siguientes tecnologías para su desarrollo:
 - Jinja2
 - SQLite3
 - Bootstrap
+- HTML5
+- CSS3
+- Javascript
 
 <!--
 ## Descarga e instalación del proyecto

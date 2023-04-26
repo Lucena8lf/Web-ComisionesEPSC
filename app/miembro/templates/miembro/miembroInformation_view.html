@@ -18,7 +18,7 @@
     {% endwith %}
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Información del miembro</h4>
+        <h4 class="card-title mt-2 mb-4">Datos miembro</h4>
         <div class="row">
           <div class="col">
             <p class="card-text"><strong>Nombre:</strong> {{ miembro.nombre }}</p>
@@ -31,7 +31,7 @@
             <p class="card-text"><strong>Tipo:</strong> {{ miembro.tipo }}</p>
           </div>
           <div class="mt-4">
-            <a href="{{url_for('miembro.update_miembro', miembro_id= miembro.id)}}" class="btn btn-primary member-button">Editar miembro</a>
+            <a href="{{url_for('miembro.update_miembro', miembro_id=miembro.id)}}" class="btn btn-primary member-button">Editar miembro</a>
           </div>
       </div>
     </div>

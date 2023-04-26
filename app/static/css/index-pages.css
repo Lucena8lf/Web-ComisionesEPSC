@@ -1,8 +1,16 @@
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
 .form-check.form-switch {
     display: flex;
     align-items: center;
     margin-left: auto;
-  }
+}
+
+.list-miembros, .list-comisiones {
+    background-color: transparent;
+}
 
 .contenedor-miembro {
     /* Para el botón de añadir */
@@ -30,3 +38,21 @@
     margin-left: 1.5rem;
     margin-top: 0.2rem;
 }
+
+.isDisabled {
+    color: currentColor;
+    cursor: not-allowed;
+    opacity: 0.5;
+    text-decoration: none;
+}
+
+/* Switch miembros */
+.form-check-input:checked {
+    background-color: #39b300;
+}
+
+.form-check-input {
+    background-color: #F44336;
+}
+
+  

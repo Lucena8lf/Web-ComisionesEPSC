@@ -1,76 +1,94 @@
-{% extends "base_template.html" %}
-
-{% block title %} Crear miembro {% endblock %}
-
-{% block content %}
+{% extends "base_template.html" %} {% block title %} Crear miembro {% endblock
+%} {% block content %}
 <div class="card container">
-    <div class="card-title">
-        <h5 class="card-title">Información del miembro</h5>
+{% with messages = get_flashed_messages(with_categories=True)  %}
+  {% if messages %}
+    {% for category, message in messages %}
+    {% if category == 'success' %}
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-    <div class="card-body">
-        <form action="" method="post" novalidate>
-            {{ form.hidden_tag() }}
-            <fieldset>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group"> 
-                            {{ form.dni.label(class_='form-label mt-4') }}
-                            {{ form.dni(class_='form-control') }}
-                            {% for error in form.dni.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                        <div class="form-group">
-                            {{ form.nombre.label(class_='form-label mt-4') }}
-                            {{ form.nombre(class_='form-control') }}
-                            {% for error in form.nombre.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            {{ form.correo.label(class_='form-label mt-4') }}
-                            {{ form.correo(class_='form-control') }}
-                            {% for error in form.apellidos.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                        <div class="form-group">
-                            {{ form.telefono.label(class_='form-label mt-4') }}
-                            {{ form.telefono(class_='form-control') }}
-                            {% for error in form.correo.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            {{ form.apellidos.label(class_='form-label mt-4') }}
-                            {{ form.apellidos(class_='form-control') }}
-                            {% for error in form.telefono.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            {{ form.tipo.label(class_='form-label mt-4') }}
-                            {{ form.tipo(class_='form-select') }}
-                            {% for error in form.tipo.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <div id="buttons-container">
-                    {{ form.submit(class_='btn btn-primary mt-4') }}
-                    <a href="{{ url_for('main.index') }}" class="btn btn-secondary mt-4">Cancelar</a>
-                </div>
-            </fieldset>
-        </form>
+    {% elif category == 'error' %}
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
+    {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+  <div class="card-title m-3">
+    <h5 class="card-title">Información del miembro</h5>
+  </div>
+  <div class="card-body">
+    <form action="" method="post" novalidate>
+      {{ form.hidden_tag() }}
+      <fieldset>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              {{ form.dni.label(class_='form-label mt-4') }} {{
+              form.dni(class_='form-control') }} {% if dni_error %}
+              <span style="color: red">{{ dni_error }}</span>
+              {% endif %}
+            </div>
+            <div class="form-group">
+              {{ form.nombre.label(class_='form-label mt-4') }} {{
+              form.nombre(class_='form-control') }} {% for error in
+              form.nombre.errors %}
+              <span style="color: red">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              {{ form.correo.label(class_='form-label mt-4') }} {{
+              form.correo(class_='form-control') }} {% for error in
+              form.correo.errors %}
+              <span style="color: red">{{ error }}</span>
+              {% endfor %}
+            </div>
+            <div class="form-group">
+              {{ form.telefono.label(class_='form-label mt-4') }} {{
+              form.telefono(class_='form-control') }} {% if telefono_error %}
+              <span style="color: red">{{ telefono_error }}</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              {{ form.apellidos.label(class_='form-label mt-4') }} {{
+              form.apellidos(class_='form-control') }} {% for error in
+              form.apellidos.errors %}
+              <span style="color: red">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              {{ form.tipo.label(class_='form-label mt-4') }} {{
+              form.tipo(class_='form-select') }} {% for error in
+              form.tipo.errors %}
+              <span style="color: red">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div id="buttons-container">
+          {{ form.submit(class_='btn btn-primary mt-4') }}
+          <a href="{{ url_for('main.index') }}" class="btn btn-secondary mt-4"
+            >Cancelar</a
+          >
+        </div>
+      </fieldset>
+    </form>
+  </div>
 </div>
 {% endblock %}

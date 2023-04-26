@@ -9,8 +9,19 @@
 	<!-- BOOTSTRAP -->
 	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}"> </link>
 
-	<!-- InDEX-PAGES.CSS -->
+	<!-- INDEX-PAGES.CSS -->
 	<link rel="stylesheet" href="{{url_for('static', filename='css/index-pages.css')}}"> </link>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         body {
@@ -24,8 +35,9 @@
 {% block content %} {% endblock %}
 
 <!-- SCRIPTS BOOTSTRAP -->
-<script src="{{url_for('static', filename='js/jquery-3.6.4.min.js')}}"></script>
 <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
-<script src="{{url_for('static', filename='js/popper.min.js')}}"></script>
+
+<!-- SweetAlert2 -->
+<script src="{{url_for('static', filename='js/sweetalert2.all.min.js')}}"></script>
 </body>
 </html>

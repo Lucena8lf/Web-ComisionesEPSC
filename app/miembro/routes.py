@@ -8,6 +8,8 @@ from .forms import CreateMiembroForm, UpdateMiembroForm
 
 from app import db
 
+from sqlalchemy.exc import IntegrityError
+
 
 # El decorador route se coge de los objetos blueprints
 @miembro_bp.route("/miembros")
@@ -20,6 +22,8 @@ def get_miembros():
 def create_miembro():
     form = CreateMiembroForm()
     error = None
+    dni_error = None
+    telefono_error = None
     if form.validate_on_submit():
         dni = form.dni.data
         nombre = form.nombre.data
@@ -31,26 +35,45 @@ def create_miembro():
         # Comprobamos que no haya un miembro con el mismo dni y que es válido
         miembro = Miembro.get_by_dni(dni)
         if miembro is not None:
-            error = f"El dni {dni} ya está siendo utilizado por otro miembro"
+            # flash(f"El dni {dni} ya está siendo utilizado por otro miembro", error)
+            dni_error = f"El dni {dni} ya está siendo utilizado por otro miembro"
         else:
-            # Creamos el miembro y lo guardamos
-            miembro = Miembro(
-                dni=dni,
-                nombre=nombre,
-                apellidos=apellidos,
-                correo=correo,
-                telefono=telefono,
-                tipo=tipo,
-            )
-            miembro.save()
+            try:
+                # Creamos el miembro y lo guardamos
+                miembro = Miembro(
+                    dni=dni,
+                    nombre=nombre,
+                    apellidos=apellidos,
+                    correo=correo,
+                    telefono=telefono,
+                    tipo=tipo,
+                )
+                miembro.save()
 
-            # Comprobamos si se ha pasado por la URL el parámetro next
-            next_page = request.args.get("next", None)
-            if not next_page or url_parse(next_page).netloc != "":
-                next_page = url_for("main.index")
-            return redirect(next_page)
+                # Comprobamos si se ha pasado por la URL el parámetro next
+                next_page = request.args.get("next", None)
+                if not next_page or url_parse(next_page).netloc != "":
+                    flash("Miembro creado con éxito!", "success")
+                    next_page = url_for("main.index")
+                return redirect(next_page)
+            except ValueError as e:
+                # flash(str(e), "error")
+                dni_error = str(e)
+            except IntegrityError as e:
+                db.session.rollback()
+                if "check_telefono_length" in str(e):
+                    telefono_error = "El número de teléfono debe tener 9 dígitos."
+                else:
+                    error = "Ha ocurrido un error al actualizar el miembro."
+                    flash(error, "error")
 
-    return render_template("miembro/crearMiembro_view.html", form=form, error=error)
+    return render_template(
+        "miembro/crearMiembro_view.html",
+        form=form,
+        error=error,
+        dni_error=dni_error,
+        telefono_error=telefono_error,
+    )
 
 
 @miembro_bp.route("/miembros/<int:miembro_id>/activar", methods=["POST"])
@@ -59,7 +82,7 @@ def activate_miembro(miembro_id):
     miembro = Miembro.get_by_id(miembro_id)
     miembro.activo = True
     db.session.commit()
-    flash("Miembro activado!")
+    # flash("Miembro activado!")
     return jsonify({"mensaje": f"Miembro {miembro_id} activado"}), 200
 
 
@@ -68,7 +91,7 @@ def deactivate_miembro(miembro_id):
     miembro = Miembro.get_by_id(miembro_id)
     miembro.activo = False
     db.session.commit()
-    flash("Miembro desactivado!")
+    # flash("Miembro desactivado!")
     return jsonify({"mensaje": f"Miembro {miembro_id} desactivado"}), 200
 
 
@@ -88,9 +111,18 @@ def update_miembro(miembro_id):
     if form.validate_on_submit():
         # Recuperamos los datos que ya tiene
         form.populate_obj(miembro)
-        db.session.commit()
-        flash("Los datos del miembro se han actualizado correctamente.", "success")
-        return redirect(url_for("miembro.consult_miembro", miembro_id=miembro.id))
+
+        try:
+            db.session.commit()
+            flash("Los datos del miembro se han actualizado correctamente.", "success")
+            return redirect(url_for("miembro.consult_miembro", miembro_id=miembro.id))
+        except IntegrityError as e:
+            db.session.rollback()
+            if "check_telefono_length" in str(e):
+                error = "El número de teléfono debe tener 9 dígitos."
+            else:
+                error = "Ha ocurrido un error al actualizar el miembro."
+                flash(error, "error")
     return render_template(
-        "miembro/updateMiembro_view.html", form=form, miembro=miembro
+        "miembro/updateMiembro_view.html", form=form, miembro=miembro, error=error
     )

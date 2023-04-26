@@ -1,7 +1,14 @@
-body {
-    background: #eacda3;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #d6ae7b, #eacda3);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #d6ae7b, #eacda3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+  background: #E0EAFC;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #CFDEF3, #E0EAFC);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  overflow: auto;
+  height: 100%;
+  /* #abc7ee */
 }
 
 .container {
@@ -12,7 +19,7 @@ body {
     height: 100px;
     width: 100px;
     margin: 10px;
-    background-color: #ccc;
+    background-color: ghostwhite;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -20,7 +27,7 @@ body {
 }
 
 .panel {
-    background-color: #eee;
+    background-color: ghostwhite;
     padding: 10px;
     min-height: 100px;
 }
@@ -33,6 +40,10 @@ body {
     float: right;
 }
 
+#display-panel-index {
+    height: 90%;
+}
+
 #iframe-index {
     width: 100%;
     height: 100%;
@@ -41,3 +52,73 @@ body {
 #info {
     height: 100%;
 }
+
+#body-cerrar-comision {
+    margin: 0 auto;
+    width: 50%;
+}
+
+#cancel-cerrar-comision {
+    float: right;
+}
+
+/* --- */
+/* Estilos para cartas de miembros */
+/* Agregar estilos a la lista de miembros */
+.members-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Estilos para las cartas de miembros */
+  .member-card {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 50%;
+  }
+  
+  .member-card h5 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .member-card p {
+    margin: 0;
+  }
+  
+  /* Media query para pantallas más pequeñas */
+  @media (max-width: 576px) {
+    .member-card {
+      padding: 10px;
+    }
+  }
+
+  /* --- */
+
+.members-comission {
+  display: flex;
+  /*max-width: 62%;*/
+  max-width: 80%;
+}
+
+#members-form {
+  width: 80%;
+}
+
+.members-form-create {
+  max-width: fit-content;
+}
+
+div.members-comission input {
+  padding-right: 22px;
+}
+
+.fecha_baja_nuevo_miembro {
+  margin-left: 0.6rem;
+  margin-right: 0.6rem;
+}
+  
+  

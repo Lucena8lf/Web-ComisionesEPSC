@@ -11,26 +11,47 @@
 
 	<!-- MAIN.CSS-->
 	<link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}"> </link>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FAVICON -->
+  <link rel="icon" type="image/jpg" href="{{url_for('static', filename='images/favicon-uco.ico')}}"/>
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">EPSC</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+          <a class="navbar-brand" href="{{url_for('main.index')}}">EPSC</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarColor01">
+          <div class="collapse navbar-collapse" id="navbarColor02">
             <ul class="navbar-nav me-auto">
               <li class="nav-item">
                 <a class="nav-link active" href="{{url_for('main.index')}}">Inicio
                   <span class="visually-hidden">(current)</span>
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Comisiones</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Comisiones</a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{{url_for('comision.create_comision')}}">Crear comisión</a>
+                </div>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Miembros</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Miembros</a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{{url_for('miembro.create_miembro')}}">Crear miembro</a>
+                </div>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Informes</a>
@@ -46,10 +67,6 @@
                 </div>
               </li>
             </ul>
-            <form class="d-flex">
-              <input class="form-control me-sm-2" type="search" placeholder="Search">
-              <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-            </form>
           </div>
         </div>
       </nav>
@@ -57,8 +74,9 @@
 {% block content %} {% endblock %}
 
 <!-- SCRIPTS BOOTSTRAP -->
-<script src="{{url_for('static', filename='js/jquery-3.6.4.min.js')}}"></script>
 <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
-<script src="{{url_for('static', filename='js/popper.min.js')}}"></script>
+
+<!-- SweetAlert2 -->
+<script src="{{url_for('static', filename='js/sweetalert2.all.min.js')}}"></script>
 </body>
 </html>
