@@ -66,6 +66,19 @@
                   <a class="dropdown-item" href="#">Separated link</a>
                 </div>
               </li>
+              {% if not current_user.is_anonymous %} 
+              <li class="nav-item dropdown user-options-navbar">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                  <svg class="user-svg-icon" fill="#000000" width="30px" height="30px" viewBox="0 0 0.9 0.9" id="user" data-name="Flat Color" xmlns="http://www.w3.org/2000/svg" class="icon flat-color"><path id="primary" d="M0.787 0.75a0.075 0.075 0 0 1 -0.075 0.075H0.188a0.075 0.075 0 0 1 -0.075 -0.075 0.225 0.225 0 0 1 0.225 -0.225h0.225a0.225 0.225 0 0 1 0.225 0.225Zm-0.337 -0.3a0.188 0.188 0 1 0 -0.188 -0.188 0.188 0.188 0 0 0 0.188 0.188Z" style="fill: rgb(0, 0, 0);"/></svg>
+                  {{ current_user.nombre }}
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item dropdown-user-name"> {{ current_user.nombre }} {{ current_user.apellidos }}</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+                </div>
+              </li>
+              {% endif %}
             </ul>
           </div>
         </div>

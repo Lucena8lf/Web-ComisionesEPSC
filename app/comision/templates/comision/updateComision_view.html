@@ -56,10 +56,10 @@
                 {% for miembro in miembros_comision %}
                 <div class="form-group my-3 members-comission">
                     <!-- El nombre es fijo, no tiene sentido cambiarlo -->
-                    <input class="form-control" id="{{ miembro[0] }}-nombre" name="nombre" readonly type="text" value="{{ miembro[1] }}"></input>
+                    <input class="form-control" id="{{ miembro[0] }}-nombre" name="nombre" readonly type="text" value="{{ miembro[3] }}"></input>
                     <!-- La fecha de incorporación y de baja si se pueden cambiar -->
-                    <input class="form-control mx-2" id="{{ miembro[0] }}-fecha_incorporacion" name="fecha_incorporacion_modificada-{{ miembro[0] }}"  type="text" placeholder="Fecha de incorporación" onfocus="(this.type='date')" onblur="(this.type='text')" onchange="checkDate(this, document.getElementsByName('fecha_apertura')[0].value); validateIncorporationDate(this)" value="{{ miembro[2] | datetime('form') }}" required></input>
-                    <input class="form-control mx-2" id="{{ miembro[0] }}-fecha_baja" name="fecha_baja_modificada-{{ miembro[0] }}" type="text" placeholder="Fecha de baja" onfocus="(this.type='date')" onblur="(this.type='text')" onchange="checkDate(this, document.getElementsByName('fecha_apertura')[0].value);" {% if miembro[3] %}  value="{{ miembro[3] | datetime('form') }}" {% endif %}></input>
+                    <input class="form-control mx-2" id="{{ miembro[0] }}-fecha_incorporacion" name="fecha_incorporacion_modificada-{{ miembro[0] }}"  type="text" placeholder="Fecha de incorporación" onfocus="(this.type='date')" onblur="(this.type='text')" onchange="checkDate(this, document.getElementsByName('fecha_apertura')[0].value); validateIncorporationDate(this)" value="{{ miembro[1] | datetime('form') }}" required></input>
+                    <input class="form-control mx-2" id="{{ miembro[0] }}-fecha_baja" name="fecha_baja_modificada-{{ miembro[0] }}" type="text" placeholder="Fecha de baja" onfocus="(this.type='date')" onblur="(this.type='text')" onchange="checkDate(this, document.getElementsByName('fecha_apertura')[0].value);" {% if miembro[2] %}  value="{{ miembro[2] | datetime('form') }}" {% endif %}></input>
                 </div>
                 {% endfor %}
                 <!-- Miembros que se podrían añadir -->

@@ -13,6 +13,7 @@ html, body {
 
 .container {
     margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 .box {
@@ -30,6 +31,19 @@ html, body {
     background-color: ghostwhite;
     padding: 10px;
     min-height: 100px;
+}
+
+.user-options-navbar {
+  margin-left: 80%
+}
+
+.user-svg-icon {
+  background-color: white;
+  margin-right: 0.5rem;
+}
+
+.dropdown-user-name {
+  pointer-events: none;
 }
 
 #submit {
@@ -60,6 +74,13 @@ html, body {
 
 #cancel-cerrar-comision {
     float: right;
+}
+
+.isDisabled {
+  color: black;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
 }
 
 /* --- */
@@ -120,5 +141,51 @@ div.members-comission input {
   margin-left: 0.6rem;
   margin-right: 0.6rem;
 }
-  
-  
+
+/* Login */
+.login {
+  min-height: 100vh;
+}
+
+.bg-image {
+  background-image: url("/static/images/logo.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.login-heading {
+  font-weight: 300;
+}
+
+.btn-login {
+  font-size: 0.9rem;
+  letter-spacing: 0.05rem;
+  padding: 0.75rem 1rem;
+}
+
+
+/* Spinner */
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border-left-color: #09f;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  animation: spin 1s ease infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

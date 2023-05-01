@@ -36,28 +36,33 @@
           <div class="col">
             <p class="card-text"><strong>Fecha de apertura: </strong> {{ comision.fecha_apertura | datetime }}</p>
             {% if comision.fecha_cierre %}
-            <p class="card-text mt-3 mb-3"><strong>Fecha de cierre: </strong> {{ comision.fecha_cierre |datetime }}</p>
+            <p class="card-text mt-3 mb-3"><strong>Fecha de cierre: </strong> {{ comision.fecha_cierre | datetime }}</p>
             {% endif %}
           </div>
           <h5 class="my-4">Composición</h5>
-          {% if not miembros_comision %}
+          {% if not data_miembros_comision %}
           <p>Esta comisión no posee actualmente ningún miembro</p>
           {% else %}
           <div class="member-list">
-            {% for miembro in miembros_comision %}
+            {% for miembro in data_miembros_comision %}
             <div class="member-card">
-                <h5 class="card-title"><strong>{{ miembro[1] }}</strong></h5>
-                <p class="card-text">&emsp;Fecha incorporación: {{ miembro[2] | datetime }}</p>
-                <p class="card-text">&emsp;Fecha de baja: {% if miembro[3] %} {{ miembro[3] | datetime }} {% else %} El miembro actualmente sigue dado de alta {% endif %}</p>
+                <h5 class="card-title"><strong>{{ miembro[3] }}</strong></h5>
+                <p class="card-text">&emsp;Fecha incorporación: {{ miembro[1] | datetime }}</p>
+                <p class="card-text">&emsp;Fecha de baja: {% if miembro[2] %} {{ miembro[2] | datetime }} {% else %} El miembro actualmente sigue dado de alta {% endif %}</p>
             </div>
             {% endfor %}
           </div>
           {% endif %}
           <div class="mt-4">
+            {% if comision.fecha_cierre %}
+            <a href="#" data-bs-toggle="popover" title="Información" data-bs-content="Esta comisión se encuentra cerrada." class="btn btn-primary member-button isDisabled">Editar comisión</a>
+            {% else %}
             <a href="{{url_for('comision.update_comision', id_comision=comision.id, miembros_comision=miembros_comision)}}" class="btn btn-primary member-button">Editar comisión</a>
+            {% endif %}
           </div>
         </div>
       </div>
     </div>
   </div>
+  <script src="{{url_for('static', filename='js/comisiones-index.js')}}"></script>
 {% endblock %}

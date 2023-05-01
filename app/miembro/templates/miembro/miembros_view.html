@@ -37,6 +37,7 @@
         </div>
         --> 
         <div class="form-check form-switch switch-miembro">
+            
             <input
                 class="form-check-input"
                 type="checkbox"
@@ -45,7 +46,9 @@
                 checked
                 {% endif %}
             />
+            
             <label class="ms-3 form-check-label" for="miembroSwitch{{ miembro.id }}"></label>
+            {% if miembro.activo %} <span id="tag-activo">✔️</span> {% else %} <span id="tag-inactivo">❌</span> {% endif %}
         </div>
         </li>
         {% endfor %}

@@ -263,7 +263,19 @@ function checkDate(fechaIntroducida, fechaApertura) {
         confirmButtonText: "Aceptar",
       });
     }
-    fechaIntroducida.value = fechaIntroducida.defaultValue;
+
+    if (fechaIntroducida.defaultValue === "") {
+      // Creamos la fecha actual con el formato que nos pide HTML para el formulario (yyyy-MM-dd)
+      const date = new Date(Date.now());
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const formattedDate = `${year}-${month}-${day}`;
+
+      fechaIntroducida.value = formattedDate;
+    } else {
+      fechaIntroducida.value = fechaIntroducida.defaultValue;
+    }
     return false;
   }
 
@@ -277,7 +289,7 @@ function validateIncorporationDate(fechaIncorporacion) {
   (Actualizar comisión)
   */
 
-  // Creamos la fecha con el formato que nos pide HTML para el formulario (yyyy-MM-dd)
+  // Creamos la fecha actual con el formato que nos pide HTML para el formulario (yyyy-MM-dd)
   const date = new Date(Date.now());
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");

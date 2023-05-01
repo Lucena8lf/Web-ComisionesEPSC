@@ -1,6 +1,9 @@
 # Fichero en el que se definen las rutas relacionadas con los miembros
 from flask import render_template, request, url_for, redirect, flash, jsonify
 from werkzeug.urls import url_parse
+
+from flask_login import login_required, current_user
+
 from . import miembro_bp
 
 from .models import Miembro
@@ -13,12 +16,14 @@ from sqlalchemy.exc import IntegrityError
 
 # El decorador route se coge de los objetos blueprints
 @miembro_bp.route("/miembros")
+@login_required
 def get_miembros():
     miembros = Miembro.query.all()
     return render_template("miembro/miembros_view.html", miembros=miembros)
 
 
 @miembro_bp.route("/miembros/crear", methods=["GET", "POST"])
+@login_required
 def create_miembro():
     form = CreateMiembroForm()
     error = None
@@ -77,6 +82,7 @@ def create_miembro():
 
 
 @miembro_bp.route("/miembros/<int:miembro_id>/activar", methods=["POST"])
+@login_required
 def activate_miembro(miembro_id):
     # miembro = Miembro.query.get_or_404(miembro_id)
     miembro = Miembro.get_by_id(miembro_id)
@@ -87,6 +93,7 @@ def activate_miembro(miembro_id):
 
 
 @miembro_bp.route("/miembros/<int:miembro_id>/desactivar", methods=["POST"])
+@login_required
 def deactivate_miembro(miembro_id):
     miembro = Miembro.get_by_id(miembro_id)
     miembro.activo = False
@@ -96,6 +103,7 @@ def deactivate_miembro(miembro_id):
 
 
 @miembro_bp.route("/miembros/<int:miembro_id>", methods=["GET"])
+@login_required
 def consult_miembro(miembro_id):
     # Obtenemos el miembro por su id
     miembro = Miembro.get_by_id(miembro_id)
@@ -104,6 +112,7 @@ def consult_miembro(miembro_id):
 
 
 @miembro_bp.route("/miembros/<int:miembro_id>/edit", methods=["GET", "POST"])
+@login_required
 def update_miembro(miembro_id):
     miembro = Miembro.get_by_id(miembro_id)
     form = UpdateMiembroForm(obj=miembro)

@@ -29,7 +29,27 @@ function inicializarCuadros() {
       if (document.getElementById("texto-index")) {
         document.getElementById("texto-index").remove();
       }
-      document.getElementById("iframe-index").setAttribute("src", url);
+      const iframe = document.getElementById("iframe-index");
+      iframe.setAttribute("src", url);
+
+      // Creamos el spinner
+      // Primero obtenemos el padre del iframe
+      const parent = iframe.parentNode;
+
+      // Creamos el nuevo div que será el spinner
+      const spinnerDiv = document.createElement("div");
+      spinnerDiv.classList.add("spinner");
+      spinnerDiv.id = "spinner";
+
+      // Agregamos el div justo después del iframe
+      parent.insertAdjacentElement("afterend", spinnerDiv);
+
+      // Función para eliminar el spinner cuando el iframe cargue la información
+      iframe.onload = function () {
+        var spinner = document.getElementById("spinner");
+        //spinner.style.display = "none";
+        spinner.remove();
+      };
       /*
       fetch(href)
         .then((response) => response.text())

@@ -38,6 +38,7 @@ def create_app():
 
     # Inicializamos con init_app base de datos, migrate, etc.
     login_manager.init_app(app)
+    login_manager.login_view = "auth.login"
 
     db.init_app(app)
     migrate.init_app(app, db, render_as_batch=True)

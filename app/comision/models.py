@@ -145,7 +145,7 @@ class Comision(db.Model):
                             "id_comision": self.id,
                         },
                     )
-                elif fecha_baja[0] < element[1]:
+                elif fecha_baja[0] > element[1]:
                     db.session.execute(
                         db.text(
                             "UPDATE miembros_comisiones SET fecha_incorporacion=(:fecha_incorporacion) WHERE id_miembro=(:id_miembro) AND id_comision=(:id_comision)"
@@ -159,7 +159,7 @@ class Comision(db.Model):
                 else:
                     message = "La fecha de incorporación debe ser anterior a la fecha de baja. Por favor, revise los datos introducidos."
 
-        # Primero comprobamos si se ha añadido una fecha de baja de alguno de los miembros
+        # Ahora comprobamos si se ha añadido una fecha de baja de alguno de los miembros
         # ya existentes
         if fechas_baja_nuevas:
             # La lista tiene tuplas de la forma: (IdMiembro, fecha_baja)
@@ -193,27 +193,39 @@ class Comision(db.Model):
         if miembros_nuevos:
             for miembro_data in miembros_nuevos:
                 miembro = Miembro.get_by_id(miembro_data[0])
+                # Ambas fechas se nos pasan como string, por lo que para compararlas las pasamos a tipo datetime.date
+                formato = "%Y-%m-%d"
+                miembro_date_incorporacion = datetime.datetime.strptime(
+                    miembro_data[1], formato
+                ).date()
+                miembro_date_baja = ""  # Para evitar errores al estar en un if
+                if miembro_data[2] != "":
+                    miembro_date_baja = datetime.datetime.strptime(
+                        miembro_data[2], formato
+                    ).date()
 
-                if miembro and miembro_data[2] > miembro_data[1]:
-                    # Insertamos la tupla para ese miembro en 'miembros_comisiones'
-                    db.session.execute(
-                        db.text(
-                            "INSERT INTO miembros_comisiones (id_miembro, id_comision, fecha_incorporacion, fecha_baja) "
-                            "VALUES (:id_miembro, :id_comision, :fecha_incorporacion, :fecha_baja)"
-                        ),
-                        {
-                            "id_miembro": miembro.id,
-                            "id_comision": self.id,
-                            "fecha_incorporacion": miembro_data[
-                                1
-                            ],  # Se recoge ahora del formulario
-                            "fecha_baja": None
-                            if miembro_data[2] == ""
-                            else miembro_data[2],  # Se recoge ahora del formulario
-                        },
-                    )
-                else:
-                    message = "La fecha de baja debe ser posterior a la fecha de incorporación. Por favor, revise los datos introducidos."
+                if miembro:
+                    if (
+                        miembro_date_baja == ""
+                        or miembro_date_baja > miembro_date_incorporacion
+                    ):
+                        # Insertamos la tupla para ese miembro en 'miembros_comisiones'
+                        db.session.execute(
+                            db.text(
+                                "INSERT INTO miembros_comisiones (id_miembro, id_comision, fecha_incorporacion, fecha_baja) "
+                                "VALUES (:id_miembro, :id_comision, :fecha_incorporacion, :fecha_baja)"
+                            ),
+                            {
+                                "id_miembro": miembro.id,
+                                "id_comision": self.id,
+                                "fecha_incorporacion": miembro_date_incorporacion,  # Se recoge ahora del formulario
+                                "fecha_baja": None
+                                if miembro_date_baja == ""
+                                else miembro_date_baja,  # Se recoge ahora del formulario
+                            },
+                        )
+                    else:
+                        message = "La fecha de baja debe ser posterior a la fecha de incorporación. Por favor, revise los datos introducidos."
 
         db.session.commit()
 

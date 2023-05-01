@@ -1,6 +1,8 @@
 from flask import render_template, url_for, request, redirect, jsonify, flash
 from werkzeug.urls import url_parse
 
+from flask_login import login_required, current_user
+
 from . import comision_bp
 
 from .models import Comision
@@ -12,16 +14,16 @@ from app import db
 
 from unidecode import unidecode
 
-import re
-
 
 @comision_bp.route("/comisiones")
+@login_required
 def get_comisiones():
     comisiones = Comision.query.all()
     return render_template("comision/comisiones_view.html", comisiones=comisiones)
 
 
 @comision_bp.route("/comisiones/crear", methods=["GET", "POST"])
+@login_required
 def create_comision():
     form = CreateComisionForm()
     error = None
@@ -94,6 +96,7 @@ def create_comision():
 
 
 @comision_bp.route("/comisiones/<int:id_comision>/cerrar", methods=["GET", "POST"])
+@login_required
 def cerrar_comision(id_comision):
     comision = Comision.get_by_id(id_comision)
 
@@ -148,6 +151,7 @@ def cerrar_comision(id_comision):
 
 
 @comision_bp.route("/comisiones/<int:id_comision>", methods=["GET"])
+@login_required
 def consult_comision(id_comision):
     # A la vista le pasamos tanto la comisión como una lista con todos los miembros
     # de esa comisión (la lista contendrá los IDs de cada miembro)
@@ -166,54 +170,37 @@ def consult_comision(id_comision):
         .all()
     ]
 
-    # La consulta anterior contiene una tupla con la ID, fecha_incorporación y
-    # fecha_baja de cada miembro de esa comisión.
-    # Para trabajar en consultas posteriores separaremos en una lista todas las IDs y
-    # en otra las fechas (incoporación + baja)
+    # A partir de esta lista (ID, fecha_incorporacion, fecha_baja) que está ordenada en el orden
+    # en el que el usuario ha ido incorporando miembros a la comisión.
 
-    # Obtenemos sólo IDs
-    id_miembros_comision = [miembro[0] for miembro in data_miembros_comision]
+    # Creamos un diccionario para asociar la ID de cada miembro a su nombre completo. Así uniremos
+    # el nombre completo de cada miembro a la lista anterior de tuplas usando diccionarios
+    # para relacionar la información -> (ID_listaTuplas -> ID_nombreCompleto)
+    # crear el diccionario "nombres_completos"
+    nombres_completos = {}
+    for miembro in Miembro.query.all():
+        id_miembro = miembro.id
+        nombre_completo = miembro.nombre + " " + miembro.apellidos
+        nombres_completos[id_miembro] = nombre_completo
 
-    # Obtenemos las fechas
-    fechas_miembros_comision = [miembro[1:] for miembro in data_miembros_comision]
+    # Suponiendo que data_miembros_comision es una lista de tuplas donde cada tupla tiene 3 elementos: ID, fecha_incorporación, fecha_baja
+    for i in range(len(data_miembros_comision)):
+        id_miembro = data_miembros_comision[i][0]
+        nombre_completo = nombres_completos.get(id_miembro, "")
+        data_miembros_comision[i] = data_miembros_comision[i] + (nombre_completo,)
 
-    # Queremos también los nombres y apellidos de cada uno. Esto lo obtenemos a partir
-    # de los IDs
-    nombres_miembros_comision = (
-        db.session.query(Miembro.nombre, Miembro.apellidos)
-        .join(miembros_comisiones, Miembro.id == miembros_comisiones.c.id_miembro)
-        .filter(Miembro.id.in_(id_miembros_comision))
-        .filter(miembros_comisiones.c.id_comision == id_comision)
-        .all()
-    )
-
-    # Esto nos devuelve una lista de tuplas, teniendo por un lado el nombre y por otro
-    # los apellidos. Unimos cada tupla de la lista en un solo string para tener el nombre
-    # completo
-    # Utilizamos: map(fun, iter)
-    #   - fun: función que se aplica a cada elemento de iter
-    #   - iter: iterable que será mapeado
-    #   - return: lista de resultados después de aplicar la función a cada elemento
-    def joinTuple(stringTuple):
-        return " ".join(stringTuple)
-
-    nombres_miembros_comision = list(map(joinTuple, nombres_miembros_comision))
-
-    # Unimos todo en una lista de tuplas con 4 elementos (ID, nombre, fecha_incorporacion, fecha_baja)
-    miembros_comision = []
-    for nombre, fecha in zip(nombres_miembros_comision, data_miembros_comision):
-        miembros_comision.append((fecha[0], nombre, fecha[1], fecha[2]))
-
-    # print(miembros_comision)
+    print("Nombres_completos -> ", nombres_completos)
+    print("Data_miembros_comision -> ", data_miembros_comision)
 
     return render_template(
         "comision/comisionInformation_view.html",
         comision=comision,
-        miembros_comision=miembros_comision,
+        data_miembros_comision=data_miembros_comision,
     )
 
 
 @comision_bp.route("/comisiones/<int:id_comision>/edit", methods=["GET", "POST"])
+@login_required
 def update_comision(id_comision):
     """
     Ruta para actualizar los datos de una comisión
@@ -236,37 +223,24 @@ def update_comision(id_comision):
         .all()
     ]
 
-    # Obtenemos sólo IDs
-    id_miembros_comision = [miembro[0] for miembro in data_miembros_comision]
+    nombres_completos = {}
+    for miembro in Miembro.query.all():
+        id_miembro = miembro.id
+        nombre_completo = miembro.nombre + " " + miembro.apellidos
+        nombres_completos[id_miembro] = nombre_completo
 
-    # Obtenemos las fechas
-    fechas_miembros_comision = [miembro[1:] for miembro in data_miembros_comision]
-
-    # Queremos también los nombres y apellidos de cada uno. Esto lo obtenemos a partir
-    # de los IDs
-    nombres_miembros_comision = (
-        db.session.query(Miembro.nombre, Miembro.apellidos)
-        .join(miembros_comisiones, Miembro.id == miembros_comisiones.c.id_miembro)
-        .filter(Miembro.id.in_(id_miembros_comision))
-        .filter(miembros_comisiones.c.id_comision == id_comision)
-        .all()
-    )
-
-    # Obtenemos nombre completo (nombre + apellidos)
-    def joinTuple(stringTuple):
-        return " ".join(stringTuple)
-
-    nombres_miembros_comision = list(map(joinTuple, nombres_miembros_comision))
-
-    miembros_comision = []
-    for nombre, fecha in zip(nombres_miembros_comision, data_miembros_comision):
-        miembros_comision.append((fecha[0], nombre, fecha[1], fecha[2]))
+    # Suponiendo que data_miembros_comision es una lista de tuplas donde cada tupla tiene 3 elementos: ID, fecha_incorporación, fecha_baja
+    for i in range(len(data_miembros_comision)):
+        id_miembro = data_miembros_comision[i][0]
+        nombre_completo = nombres_completos.get(id_miembro, "")
+        data_miembros_comision[i] = data_miembros_comision[i] + (nombre_completo,)
 
     # --- #
 
     # Obtenemos todos los miembros activos que son los que se pueden añadir a la comisión
     # A diferencia de crear la comisión, ahora sólo obtenemos los que NO formen parte
     # de esa comisión
+    id_miembros_comision = [miembro[0] for miembro in data_miembros_comision]
     miembros_activos = [
         (m.id, m.nombre, m.apellidos)
         for m in Miembro.query.filter_by(activo=True)
@@ -393,6 +367,7 @@ def update_comision(id_comision):
                 fechas_incorporacion_nuevas=fechas_incorporacion,
                 miembros_nuevos=miembros_nuevos,
             )
+            print("ENTRO AQUI")
             if error_message:
                 flash(error_message, "error")
         else:
@@ -407,7 +382,7 @@ def update_comision(id_comision):
 
         if error_name_message:
             flash(error_name_message, "error")
-        else:
+        elif not error_name_message and not error_message:
             # Si ha cambiado la fecha de apertura comprobamos que todos los miembros que tengan
             # su fecha de incorporación ANTERIOR a esta fecha de apertura, se establezca por defecto
             # que tenga como fecha de incorporación la fecha de apertura de la comisión
@@ -422,10 +397,11 @@ def update_comision(id_comision):
             )
         return redirect(url_for("comision.consult_comision", id_comision=comision.id))
 
+    print("Data_miembros ->", data_miembros_comision)
     return render_template(
         "comision/updateComision_view.html",
         form=form,
         comision=comision,
         miembros=miembros_activos,
-        miembros_comision=miembros_comision,
+        miembros_comision=data_miembros_comision,
     )

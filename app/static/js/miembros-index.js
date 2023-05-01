@@ -34,6 +34,9 @@ if (switches) {
                 "El miembro ha sido desactivado con éxito",
                 "success"
               );
+              // Modificamos el tag
+              let spanActivo = document.getElementById("tag-activo");
+              spanActivo.innerHTML = "❌";
             } else {
               Swal.fire(
                 "Error",
@@ -68,6 +71,9 @@ if (switches) {
                 "El miembro ha sido activado con éxito",
                 "success"
               );
+              // Modificamos el tag
+              let spanInactivo = document.getElementById("tag-inactivo");
+              spanInactivo.innerHTML = "✔️";
             } else {
               Swal.fire(
                 "Error",

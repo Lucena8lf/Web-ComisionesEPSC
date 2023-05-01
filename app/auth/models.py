@@ -8,6 +8,8 @@ class Administrativo(db.Model, UserMixin):
     __tablename__ = "administrativo"
 
     id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(80), nullable=False)
+    apellidos = db.Column(db.String(128), nullable=False)
     correo = db.Column(db.String(256), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
 
@@ -39,11 +41,11 @@ class Administrativo(db.Model, UserMixin):
         """
         Método que obtiene el administrativo a partir de su id
         """
-        Administrativo.query.get(id)
+        return Administrativo.query.get(id)
 
     @staticmethod
     def get_by_correo(correo):
         """
         Método que obtiene el administrativo a partir de su correo
         """
-        Administrativo.query.filter_by(correo=correo).first()
+        return Administrativo.query.filter_by(correo=correo).first()
