@@ -37,6 +37,7 @@ if (switches) {
               // Modificamos el tag
               let spanActivo = document.getElementById("tag-activo");
               spanActivo.innerHTML = "❌";
+              spanActivo.id = "tag-inactivo";
             } else {
               Swal.fire(
                 "Error",
@@ -74,6 +75,7 @@ if (switches) {
               // Modificamos el tag
               let spanInactivo = document.getElementById("tag-inactivo");
               spanInactivo.innerHTML = "✔️";
+              spanInactivo.id = "tag-activo";
             } else {
               Swal.fire(
                 "Error",

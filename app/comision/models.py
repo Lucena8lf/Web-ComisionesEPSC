@@ -77,19 +77,36 @@ class Comision(db.Model):
         # La comisión no es borrada como tal, sino que se setea su fecha de cierre
         self.fecha_cierre = fecha_cierre
 
-        # Automáticamente a todos los miembros actuales se les pondrá como
+        # Automáticamente a todos los miembros actuales que no tengan fecha de cierre
+        # o tengan una fecha de baja posterior a la de cierre se les pondrá como
         # fecha de baja la fecha de cierre
         for id_miembro in miembros_comision:
-            db.session.execute(
+            # Excluimos los miembros que ya tienen una fecha de baja anterior a la
+            # fecha de cierre
+            fecha_baja = db.session.execute(
                 db.text(
-                    "UPDATE miembros_comisiones SET fecha_baja=(:fecha_cierre) WHERE id_miembro=(:id_miembro) AND id_comision=(:id_comision)"
+                    "SELECT fecha_baja FROM miembros_comisiones WHERE id_miembro=(:id_miembro) AND id_comision=(:id_comision)"
                 ),
                 {
-                    "fecha_cierre": fecha_cierre,
                     "id_miembro": id_miembro,
                     "id_comision": self.id,
                 },
-            )
+            ).fetchone()
+
+            # Obtenemos fecha baja como un str, por lo que la transformamos
+            formato = "%Y-%m-%d"
+            fecha_baja = datetime.datetime.strptime(fecha_baja[0], formato).date()
+            if fecha_baja > fecha_cierre:
+                db.session.execute(
+                    db.text(
+                        "UPDATE miembros_comisiones SET fecha_baja=(:fecha_cierre) WHERE id_miembro=(:id_miembro) AND id_comision=(:id_comision)"
+                    ),
+                    {
+                        "fecha_cierre": fecha_cierre,
+                        "id_miembro": id_miembro,
+                        "id_comision": self.id,
+                    },
+                )
 
         # Guardamos en la base de datos
         db.session.commit()

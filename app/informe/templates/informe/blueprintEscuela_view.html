@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificado Junta de Escuela</title>
+
+    <!-- OJO! pdfkit.from_string() can't load css from URL -->
+    
+    <!-- Blueprint-pdf.css --> 
+    <link rel="stylesheet" href="{{url_for('static', filename='css/blueprint-pdf.css', _external=True)}}"> </link>
+</head>
+<body>
+    <div class="container container-padre">
+        <div class="container-image">
+            <img src="C:\Users\Lucen\OneDrive\Escritorio\comisiones_flask_app\app\static\images\logotipo-EPSC.png" alt="Imagen" class="logotipo">
+        </div>
+        <div class="container-below-image">
+            <div class="container-secretario">
+                <h2 class="lead text-justify">
+                    D.  {{secretario.upper()}},  SECRETARIO  DE  LA  ESCUELA POLITÉCNICA SUPERIOR DE CÓRDOBA DE
+                    LA UNIVERSIDAD DE CÓRDOBA
+                </h2>
+            </div>
+            <div class="container-comisiones">
+                <h2>CERTIFICA:</h2>
+                <p class="text-justify">Que <b>{{miembro.nombre.upper()}} {{miembro.apellidos.upper()}}</b>, con DNI {{miembro.dni}}, es miembro de la
+                    Junta de Escuela de la Escuela Politécnica Superior de Córdoba desde {{comision[0] | datetime}} hasta {% if not comision[1] %} la actualidad. {% else %} el {{comision[1] | datetime}}. {% endif %}
+                </p>
+                <p>
+                    Y para que conste y surta los efectos oportunos, firmo el presente certificado
+                    en Córdoba, a {{fecha_actual | datetime}}.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

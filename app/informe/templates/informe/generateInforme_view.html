@@ -1,0 +1,85 @@
+{% extends "base_template.html" %}
+
+{% block title %} Generar informes {% endblock %}
+
+{% block content %}
+<div class="card container">
+        <div id="message" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        
+
+<div class="card-title m-3">
+    <h5 class="card-title">Generar informe</h5>
+</div>
+<div class="card-body">
+    <form action="" method="post" target="_SEJ" rel="noreferrer" onsubmit="handleSubmit(event)" novalidate>
+        {{ form.hidden_tag() }}
+        <fieldset>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                {{ form.secretario.label(class_='form-label mt-4') }} {{
+                form.secretario(class_='form-control') }} {% for error in form.secretario.errors %}
+                <span style="color: red">{{ error }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                {{ form.fecha_inicio.label(class_='form-label mt-4') }} {{
+                form.fecha_inicio(class_='form-control', onchange_='validateDates(this)') }} {% for error in
+                form.fecha_inicio.errors %}
+                <span style="color: red">{{ error }}</span>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                  {{ form.fecha_fin.label(class_='form-label mt-4') }} {{
+                  form.fecha_fin(class_='form-control', onchange_='validateDates(this)') }} {% for error in
+                  form.fecha_fin.errors %}
+                  <span style="color: red">{{ error }}</span>
+                  {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                {{ form.miembro.label(class_='form-label mt-4') }} {{
+                form.miembro(class_='form-control') }} {% for error in form.miembro.errors %}
+                <span style="color: red">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row mt-5 mb-3">
+            {% for subfield in form.tipo_informe %}
+            <div class="col-sm-6">
+                <div class="form-check-inline">
+                    {{ subfield.label(class_='form-check-label mt-4 d-inline') }} {{
+                        subfield(class_='form-check-input') }} {% for error in subfield.errors %}
+                    <span style="color: red">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div id="buttons-container">
+            {{ form.submit(class_='btn btn-primary mt-4') }}
+            <a href="{{ url_for('main.index') }}" class="btn btn-secondary mt-4"
+                >Cancelar</a
+            >
+        </div>
+        </fieldset>
+    </form>
+
+</div>
+
+</div>
+<script src="{{url_for('static', filename='js/informes.js')}}"></script>
+{% endblock %}

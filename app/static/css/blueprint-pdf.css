@@ -1,0 +1,73 @@
+body .container-below-image {
+    margin-left: 100px;
+    margin-right: 50px;
+}
+
+.container-padre {
+  position: relative;
+  overflow: auto;
+}
+
+.logotipo-inferior {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+	width: 430px;
+}
+
+.logo {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 9999;
+    width: 430px;
+}
+
+.logo-inferior {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.container-below-image {
+    margin-top: 100px;
+    padding-top: 100px;
+    
+}
+
+.container-secretario,
+.container-comisiones {
+  background-color: white;
+  padding-top: 50px;
+}
+
+h3 {
+    line-height: 30px;
+}
+
+p {
+    text-indent: 40px;
+    font-size: 20px;
+    line-height: 40px;
+}
+
+p::first-line {
+    text-indent: 0;
+}
+
+ul li p {
+    text-indent: 20px;
+    font-size: 18px;
+}
+
+.container-comisiones p {
+    margin-top: 60px;
+}
+
+@page :last {
+    @bottom-left {
+      content: url('../images/bottomLeftCorner.png');
+      height: 50px;
+    }
+}
+  

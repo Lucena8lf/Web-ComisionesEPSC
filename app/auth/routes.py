@@ -20,9 +20,7 @@ def login():
 
     if form.validate_on_submit():
         administrativo = Administrativo.get_by_correo(form.correo.data)
-        # Pass 123 -> Hash:
-        # print(administrativo.set_password(form.password.data))
-        print(administrativo.check_password(form.password.data))
+
         # Vemos si existe un administrativo con ese correo y si coincide la contraseña
         if administrativo is not None and administrativo.check_password(
             form.password.data

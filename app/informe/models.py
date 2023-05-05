@@ -9,7 +9,7 @@ class Informe(db.Model):
     fecha_inicio = db.Column(db.DateTime, nullable=False)
     fecha_fin = db.Column(db.DateTime, nullable=False)
     tipo = db.Column(db.Enum("escuela", "comision"), nullable=False)
-    dni_miembro = db.Column(db.String(20), db.ForeignKey("miembro.dni"), nullable=False)
+    id_miembro = db.Column(db.Integer, db.ForeignKey("miembro.id"), nullable=False)
 
     def __repr__(self):
         """
@@ -17,3 +17,19 @@ class Informe(db.Model):
         de esta clase
         """
         return f"<Informe {Informe.correo}>"
+
+    def save(self):
+        """
+        Método para crear un nuevo informe
+        """
+        if not self.id:
+            db.session.add(self)
+
+        db.session.commit()
+
+    @staticmethod
+    def get_by_id(id):
+        """
+        Método para obtener un informe a partir de su id
+        """
+        return Informe.query.get(id)

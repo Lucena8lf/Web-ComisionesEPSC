@@ -44,17 +44,7 @@ def create_comision():
         nombre = form.nombre.data
         comentarios = form.comentarios.data
         fecha_apertura = form.fecha_apertura.data
-        id_miembros = request.form.getlist("miembros")  # Luego vemos que hacer con él
-
-        print("Miembros devuelve: ", id_miembros)
-        print(jsonify(request.form))
-        # return jsonify(request.form)
-        # return render_template(
-        #    "comision/crearComision_view.html",
-        #    miembros=miembros_activos,
-        #    form=form,
-        #    error=error,
-        # )
+        id_miembros = request.form.getlist("miembros")
 
         # Si ha seleccionado uno o más miembros...
 
@@ -189,8 +179,8 @@ def consult_comision(id_comision):
         nombre_completo = nombres_completos.get(id_miembro, "")
         data_miembros_comision[i] = data_miembros_comision[i] + (nombre_completo,)
 
-    print("Nombres_completos -> ", nombres_completos)
-    print("Data_miembros_comision -> ", data_miembros_comision)
+    # print("Nombres_completos -> ", nombres_completos)
+    # print("Data_miembros_comision -> ", data_miembros_comision)
 
     return render_template(
         "comision/comisionInformation_view.html",
@@ -329,9 +319,9 @@ def update_comision(id_comision):
             )
         )
 
-        print("Lista fechas de incorporación -> ", fechas_incorporacion)
-        print("Lista fechas de baja -> ", fechas_baja)
-        print("Lista miembros nuevos -> ", miembros_nuevos)
+        # print("Lista fechas de incorporación -> ", fechas_incorporacion)
+        # print("Lista fechas de baja -> ", fechas_baja)
+        # print("Lista miembros nuevos -> ", miembros_nuevos)
 
         # return render_template(
         #    "comision/updateComision_view.html",
