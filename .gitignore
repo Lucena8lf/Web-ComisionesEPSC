@@ -1,2 +1,8 @@
+# Byte-compiled
 __pycache__
+
+# Enviroment
 env
+
+# Flask stuff
+instance/
