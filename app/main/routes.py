@@ -8,4 +8,4 @@ from . import main_bp
 @main_bp.route("/")
 @login_required
 def index():
-    return render_template("main/index.html")
+    return render_template("main/index.html", current_user=current_user)

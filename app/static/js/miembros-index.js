@@ -35,9 +35,11 @@ if (switches) {
                 "success"
               );
               // Modificamos el tag
-              let spanActivo = document.getElementById("tag-activo");
+              let spanActivo = document.getElementById(
+                `tag-activo${miembroId}`
+              );
               spanActivo.innerHTML = "❌";
-              spanActivo.id = "tag-inactivo";
+              spanActivo.id = `tag-inactivo${miembroId}`;
             } else {
               Swal.fire(
                 "Error",
@@ -73,9 +75,11 @@ if (switches) {
                 "success"
               );
               // Modificamos el tag
-              let spanInactivo = document.getElementById("tag-inactivo");
+              let spanInactivo = document.getElementById(
+                `tag-inactivo${miembroId}`
+              );
               spanInactivo.innerHTML = "✔️";
-              spanInactivo.id = "tag-activo";
+              spanInactivo.id = `tag-activo${miembroId}`;
             } else {
               Swal.fire(
                 "Error",

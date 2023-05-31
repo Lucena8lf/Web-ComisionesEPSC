@@ -23,11 +23,11 @@
           <div class="col">
             <p class="card-text"><strong>Nombre:</strong> {{ miembro.nombre }}</p>
             <p class="card-text"><strong>DNI:</strong> {{ miembro.dni }}</p>
-            <p class="card-text"><strong>Teléfono:</strong> {{ miembro.telefono }}</p>
+            <p class="card-text"><strong>Teléfono:</strong>{% if miembro.telefono %} {{ miembro.telefono }} {% endif %}</p>
           </div>
           <div class="col">
             <p class="card-text"><strong>Apellidos:</strong> {{ miembro.apellidos }}</p>
-            <p class="card-text"><strong>Correo:</strong> {{ miembro.correo }}</p>
+            <p class="card-text"><strong>Correo:</strong>{% if miembro.correo %} {{ miembro.correo }} {% endif %}</p>
             <p class="card-text"><strong>Tipo:</strong> {{ miembro.tipo }}</p>
           </div>
           <div class="mt-4">

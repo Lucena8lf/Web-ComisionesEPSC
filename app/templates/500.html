@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404</title>
+
+	<!-- BOOTSTRAP -->
+	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}"> </link>
+
+	<!-- MAIN.CSS-->
+	<link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}"> </link>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+        
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FAVICON -->
+    <link rel="icon" type="image/jpg" href="{{url_for('static', filename='images/favicon-uco.ico')}}"/>
+
+</head>
+
+<body>
+    <div class="d-flex align-items-center justify-content-center vh-100">
+        <div class="text-center notfound">
+            <h1 class="display-1 fw-bold">500</h1>
+            <p class="fs-3"> <span class="text-danger fw-bold">Opps! </span>Parece que algo no ha ido bien</p>
+            <p class="lead ">
+                No te preocupes, vuelve a intentarlo más tarde. Si el error persiste contacta con soporte.
+            </p>
+            <a href="{{url_for('main.index')}}" class="btn btn-primary">Volver a inicio</a>
+        </div>
+        <div class="bg-overlay"></div> <!-- contenedor para la imagen -->
+    </div>
+</body>

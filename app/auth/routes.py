@@ -37,7 +37,7 @@ def login():
 
             return redirect(next_page)
         else:
-            error = "Correo y/o contraseña incorrectos"
+            error = "Correo o contraseña incorrectos"
 
     return render_template("auth/login_view.html", form=form, error=error)
 

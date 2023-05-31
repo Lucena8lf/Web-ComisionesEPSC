@@ -30,12 +30,14 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="{{url_for('main.index')}}">EPSC</a>
+          <a class="navbar-brand" href="{{url_for('main.index')}}">
+            <img class="logo-navbar" src="{{url_for('static', filename='images/simboloEPSC.png')}}">
+          </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarColor02">
-            <ul class="navbar-nav me-auto">
+            <ul class="navbar-nav me-auto sticky">
               <li class="nav-item">
                 <a class="nav-link active" href="{{url_for('main.index')}}">Inicio
                   <span class="visually-hidden">(current)</span>
@@ -56,23 +58,16 @@
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('informe.generate_informe') }}">Informes</a>
               </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                <div class="dropdown-menu">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Separated link</a>
-                </div>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('informe.generate_informe') }}">Exportar</a>
               </li>
               {% if not current_user.is_anonymous %} 
-              <li class="nav-item dropdown user-options-navbar">
+              <li class="nav-item dropdown user-options-navbar d-flex justify-content-end">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                   <svg class="user-svg-icon" fill="#000000" width="30px" height="30px" viewBox="0 0 0.9 0.9" id="user" data-name="Flat Color" xmlns="http://www.w3.org/2000/svg" class="icon flat-color"><path id="primary" d="M0.787 0.75a0.075 0.075 0 0 1 -0.075 0.075H0.188a0.075 0.075 0 0 1 -0.075 -0.075 0.225 0.225 0 0 1 0.225 -0.225h0.225a0.225 0.225 0 0 1 0.225 0.225Zm-0.337 -0.3a0.188 0.188 0 1 0 -0.188 -0.188 0.188 0.188 0 0 0 0.188 0.188Z" style="fill: rgb(0, 0, 0);"/></svg>
                   {{ current_user.nombre }}
                 </a>
-                <div class="dropdown-menu">
+                <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item dropdown-user-name"> {{ current_user.nombre }} {{ current_user.apellidos }}</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Cerrar sesión</a>

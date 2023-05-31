@@ -6,8 +6,8 @@ class Informe(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     secretario = db.Column(db.String(256), nullable=False)
-    fecha_inicio = db.Column(db.DateTime, nullable=False)
-    fecha_fin = db.Column(db.DateTime, nullable=False)
+    fecha_inicio = db.Column(db.Date, nullable=False)
+    fecha_fin = db.Column(db.Date, nullable=False)
     tipo = db.Column(db.Enum("escuela", "comision"), nullable=False)
     id_miembro = db.Column(db.Integer, db.ForeignKey("miembro.id"), nullable=False)
 

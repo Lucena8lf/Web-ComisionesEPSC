@@ -1,5 +1,7 @@
 import datetime
 
+from datetime import date
+
 from app import db
 
 from sqlalchemy.orm import validates
@@ -13,17 +15,18 @@ import re
 # Cambiar de dni_miembro a id_miembro
 miembros_comisiones = db.Table(
     "miembros_comisiones",
-    db.Column("id_miembro", db.Integer, db.ForeignKey("miembro.id"), primary_key=True),
-    db.Column(
-        "id_comision", db.Integer, db.ForeignKey("comision.id"), primary_key=True
-    ),
+    db.Column("id", db.Integer, primary_key=True),
+    db.Column("id_miembro", db.Integer, db.ForeignKey("miembro.id"), nullable=False),
+    db.Column("id_comision", db.Integer, db.ForeignKey("comision.id"), nullable=False),
     db.Column(
         "fecha_incorporacion",
-        db.DateTime,
+        db.Date,
         nullable=False,
-        default=datetime.datetime.utcnow,
+        default=date.today(),
     ),
-    db.Column("fecha_baja", db.DateTime, nullable=True),
+    db.Column("fecha_baja", db.Date, nullable=True),
+    db.Column("cargo", db.String(1000), nullable=True),
+    db.Column("motivo_baja", db.String(1000), nullable=True),
 )
 
 
@@ -34,11 +37,9 @@ class Miembro(db.Model):
     dni = db.Column(db.String(20), nullable=False)
     nombre = db.Column(db.String(80), nullable=False)
     apellidos = db.Column(db.String(128), nullable=False)
-    correo = db.Column(db.String(256), unique=True, nullable=False)
-    telefono = db.Column(db.Integer, nullable=False)
-    tipo = db.Column(
-        db.Enum("Estudiante", "Profesor", "PAS", "Externo"), nullable=False
-    )
+    correo = db.Column(db.String(256), unique=True, nullable=True)
+    telefono = db.Column(db.Integer, nullable=True)
+    tipo = db.Column(db.Enum("Estudiante", "PDI", "PAS", "Externo"), nullable=False)
     activo = db.Column(db.Boolean, default=True)
     comisiones = db.relationship(
         "Comision",
@@ -94,3 +95,15 @@ class Miembro(db.Model):
         Método para obtener un miembro a partir de su dni
         """
         return Miembro.query.filter_by(dni=dni).first()
+
+    @staticmethod
+    def get_all_paginated(page=1, per_page=20):
+        """
+        Método que devuelve las miembros paginados
+            :param page: Página a partir de la cual se obtienen los resultados
+            :param per_page: Cuántos elementos se devuelven en cada página
+            :return: Objeto 'pagination' con los miembros
+        """
+        return Miembro.query.order_by(Miembro.nombre.asc()).paginate(
+            page=page, per_page=per_page, error_out=False
+        )

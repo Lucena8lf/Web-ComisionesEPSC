@@ -31,7 +31,9 @@
         <div class="row">
           <div class="col">
             <p class="card-text"><strong>Nombre:</strong> {{ comision.nombre }}</p>
+            {% if comision.comentarios %}
             <p class="card-text d-grid mt-3 mb-3"><strong>Comentarios:</strong> {{ comision.comentarios }}</p>
+            {% endif %}
           </div>
           <div class="col">
             <p class="card-text"><strong>Fecha de apertura: </strong> {{ comision.fecha_apertura | datetime }}</p>
@@ -46,19 +48,23 @@
           <div class="member-list">
             {% for miembro in data_miembros_comision %}
             <div class="member-card">
-                <h5 class="card-title"><strong>{{ miembro[3] }}</strong></h5>
-                <p class="card-text">&emsp;Fecha incorporación: {{ miembro[1] | datetime }}</p>
-                <p class="card-text">&emsp;Fecha de baja: {% if miembro[2] %} {{ miembro[2] | datetime }} {% else %} El miembro actualmente sigue dado de alta {% endif %}</p>
+              <h5 class="card-title"><strong>{{ miembro[5] }}</strong></h5>
+              {% if miembro[3] %}
+              <p class="card-text">&emsp;<strong>Cargo:</strong> {{ miembro[3] }}</p>
+              <br>
+              {% endif %}
+              <p class="card-text">&emsp;<strong>Fecha incorporación:</strong> {{ miembro[1] | datetime }}</p>
+              <p class="card-text">&emsp;<strong>Fecha de baja:</strong> {% if miembro[2] %} {{ miembro[2] | datetime }} {% else %} El miembro actualmente sigue dado de alta {% endif %}</p>
+              {% if miembro[4] %}
+              <div class="member-info-separator"></div>
+              <p class="card-text">&emsp;<strong>Motivo de baja:</strong> {{ miembro[4] }}</p>
+              {% endif %}
             </div>
             {% endfor %}
           </div>
           {% endif %}
           <div class="mt-4">
-            {% if comision.fecha_cierre %}
-            <a href="#" data-bs-toggle="popover" title="Información" data-bs-content="Esta comisión se encuentra cerrada." class="btn btn-primary member-button isDisabled">Editar comisión</a>
-            {% else %}
-            <a href="{{url_for('comision.update_comision', id_comision=comision.id, miembros_comision=miembros_comision)}}" class="btn btn-primary member-button">Editar comisión</a>
-            {% endif %}
+            <a {% if comision.fecha_cierre %} href="{{url_for('comision.update_comision_cerrada', id_comision=comision.id, miembros_comision=miembros_comision)}}"  {% else %} href="{{url_for('comision.update_comision', id_comision=comision.id, miembros_comision=miembros_comision)}}" {% endif %} class="btn btn-primary member-button">Editar comisión</a>
           </div>
         </div>
       </div>

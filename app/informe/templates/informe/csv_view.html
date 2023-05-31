@@ -1,0 +1,13 @@
+{% extends "indexPages_template.html" %}
+
+{% block title %} Lista comisiones {% endblock %}
+
+{% block content %}
+<div class="container">
+    <ul>
+    {% for row in result %}
+        <li>{{ row }}</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}

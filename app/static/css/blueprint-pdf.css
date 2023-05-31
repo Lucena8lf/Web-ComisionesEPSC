@@ -1,3 +1,8 @@
+/* Para page-break-inside */
+* {
+    overflow: visible !important;
+}
+
 body .container-below-image {
     margin-left: 100px;
     margin-right: 50px;
@@ -23,16 +28,48 @@ body .container-below-image {
     width: 430px;
 }
 
-.logo-inferior {
+.logo-inferior-izquierda {
     position: fixed;
     bottom: 0;
     left: 0;
+    width: 430px;
+}
+
+.logo-inferior-derecha {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 430px;
+}
+
+.comisiones-bottom-images-wrapper{
+    /* 950px es lo que ocupa una página del pdf */
+    height: 950px;
+    position: relative;
+    page-break-inside: avoid;
+    bottom: 0;
+}
+
+.escuela-bottom-images-wrapper{
+    height: 450px;
+    position: relative;
+    page-break-inside: avoid;
+    bottom: 0;
+}
+
+.comisiones-bottom-images-wrapper img{
+    position: absolute;
+    bottom: 0;
+}
+
+.escuela-bottom-images-wrapper img{
+    position: absolute;
+    bottom: 0;
 }
 
 .container-below-image {
     margin-top: 100px;
-    padding-top: 100px;
-    
+    padding-top: 200px;   
 }
 
 .container-secretario,
@@ -49,6 +86,9 @@ p {
     text-indent: 40px;
     font-size: 20px;
     line-height: 40px;
+    text-align: justify;
+    text-justify: inter-word;
+    letter-spacing: 0.5px;
 }
 
 p::first-line {
@@ -58,16 +98,17 @@ p::first-line {
 ul li p {
     text-indent: 20px;
     font-size: 18px;
+    page-break-inside: avoid;
 }
 
 .container-comisiones p {
-    margin-top: 60px;
+    margin-top: 20px;
+    page-break-inside: avoid;
 }
 
-@page :last {
-    @bottom-left {
-      content: url('../images/bottomLeftCorner.png');
-      height: 50px;
-    }
+.signature {
+    padding-top: 100px;
+    /* Párrafo de firme en una nueva página */
+    page-break-before: always;
 }
   

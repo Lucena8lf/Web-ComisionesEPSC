@@ -1,77 +1,109 @@
-{% extends "base_template.html" %}
-
-{% block title %} Crear comisión {% endblock %}
-
-{% block content %}
+{% extends "base_template.html" %} {% block title %} Crear comisión {% endblock
+%} {% block content %}
 <div class="card container">
-    {% with messages = get_flashed_messages()  %}
-      {% if messages %}
-      {% for message in messages %}
-      <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-        {{ message }}
-        <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      {% endfor %}
-      {% endif %}
-      {% endwith %}
-    <div class="card-title m-3">
-        <h5 class="card-title">Datos comisión</h5>
-    </div>
-    <div class="card-body">
-        <form action="" method="post" novalidate>
-            {{ form.hidden_tag() }}
-            <fieldset>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            {{ form.nombre.label(class_='form-label mt-4') }}
-                            {{ form.nombre(class_='form-control') }}
-                            {% for error in form.nombre.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                        <div class="form-group">
-                            {{ form.comentarios.label(class_='form-label mt-4') }}
-                            {{ form.comentarios(class_='form-control') }}
-                            {% for error in form.comentarios.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="col-sm">
-                        <div class="form-group">
-                            {{ form.fecha_apertura.label(class_='form-label mt-4') }}
-                            {{ form.fecha_apertura(class_='form-control') }}
-                            {% for error in form.fecha_apertura.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <h5 class="mt-5">Composición</h5>
-                <div class="form-group d-flex align-items-center members-group">
-                    <div id="members-form" class="members-form-create">
-                        <div class="form-group d-flex align-items-center mb-3" id="members-0">
-                            <select id="member-0" name="miembros" class="form-control m-3">
-                                {% for miembro in miembros %}
-                                  <option value="{{ miembro[0] }}">{{ miembro[1] }} {{ miembro[2] }}</option>
-                                {% endfor %}
-                              </select>
-                            <button type="button" class="btn" id="add-member-button" onclick="addMembersCreate()">
-                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 512 512" width="30" height="30"><g><g><path d="M15 0.645C7.085 0.645 0.645 7.085 0.645 15s6.44 14.355 14.355 14.355 14.355 -6.44 14.355 -14.355S22.915 0.645 15 0.645zm0 26.321c-6.598 0 -11.966 -5.367 -11.966 -11.966S8.402 3.035 15 3.035 26.965 8.402 26.965 15 21.598 26.965 15 26.965z"/><path d="M20.953 13.804h-4.758V9.046c0 -0.661 -0.532 -1.196 -1.196 -1.196s-1.196 0.532 -1.196 1.196v4.758H9.046c-0.661 0 -1.196 0.532 -1.196 1.196s0.532 1.196 1.196 1.196h4.758v4.758c0 0.661 0.532 1.196 1.196 1.196s1.196 -0.532 1.196 -1.196v-4.758h4.758c0.661 0 1.196 -0.532 1.196 -1.196s-0.532 -1.196 -1.196 -1.196z"/></g></g></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div id="buttons-container">
-                    {{ form.submit(class_='btn btn-primary mt-4') }}
-                    <a href="{{ url_for('main.index') }}" class="btn btn-secondary mt-4">Cancelar</a>
-                </div>
-            </fieldset>
-        </form>
-    </div>
+  {% with messages = get_flashed_messages() %} {% if messages %} {% for message
+  in messages %}
+  <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %} {% endif %} {% endwith %}
+  <div class="card-title m-3">
+    <h5 class="card-title">Datos comisión</h5>
+  </div>
+  <div class="card-body">
+    <form action="" method="post" novalidate>
+      {{ form.hidden_tag() }}
+      <fieldset>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              {{ form.nombre.label(class_='form-label mt-4') }} {{
+              form.nombre(class_='form-control') }} {% for error in
+              form.nombre.errors %}
+              <span style="color: red">{{ error }}</span>
+              {% endfor %}
+            </div>
+            <div class="form-group">
+              {{ form.comentarios.label(class_='form-label mt-4') }} {{
+              form.comentarios(class_='form-control') }} {% for error in
+              form.comentarios.errors %}
+              <span style="color: red">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="form-group">
+              {{ form.fecha_apertura.label(class_='form-label mt-4') }} {{
+              form.fecha_apertura(class_='form-control') }} {% for error in
+              form.fecha_apertura.errors %}
+              <span style="color: red">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <h5 class="mt-5">Composición</h5>
+        <div class="form-group d-flex align-items-center members-group">
+          <div id="members-form" class="members-form-create">
+            <div
+              class="form-group d-flex align-items-center mb-3"
+              id="members-0"
+            >
+              <select id="member-0" name="miembros" class="form-control m-3 input-nombre">
+                {% for miembro in miembros %}
+                <option value="{{ miembro[0] }}">
+                  {{ miembro[1] }} {{ miembro[2] }}
+                </option>
+                {% endfor %}
+              </select>
+              <input id="member-0" name="cargos" class="form-control m-3" type="text" placeholder="Cargo desempeñado">
+              <button
+                type="button"
+                class="btn"
+                id="add-member-button"
+                onclick="addMembersCreate()"
+              >
+                <svg
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 30 30"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  enable-background="new 0 0 512 512"
+                  width="30"
+                  height="30"
+                >
+                  <g>
+                    <g>
+                      <path
+                        d="M15 0.645C7.085 0.645 0.645 7.085 0.645 15s6.44 14.355 14.355 14.355 14.355 -6.44 14.355 -14.355S22.915 0.645 15 0.645zm0 26.321c-6.598 0 -11.966 -5.367 -11.966 -11.966S8.402 3.035 15 3.035 26.965 8.402 26.965 15 21.598 26.965 15 26.965z"
+                      />
+                      <path
+                        d="M20.953 13.804h-4.758V9.046c0 -0.661 -0.532 -1.196 -1.196 -1.196s-1.196 0.532 -1.196 1.196v4.758H9.046c-0.661 0 -1.196 0.532 -1.196 1.196s0.532 1.196 1.196 1.196h4.758v4.758c0 0.661 0.532 1.196 1.196 1.196s1.196 -0.532 1.196 -1.196v-4.758h4.758c0.661 0 1.196 -0.532 1.196 -1.196s-0.532 -1.196 -1.196 -1.196z"
+                      />
+                    </g>
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="buttons-container">
+          {{ form.submit(class_='btn btn-primary mt-4') }}
+          <a href="{{ url_for('main.index') }}" class="btn btn-secondary mt-4"
+            >Cancelar</a
+          >
+        </div>
+      </fieldset>
+    </form>
+  </div>
 
-<script src="{{url_for('static', filename='js/comisiones.js')}}"></script>
-{% endblock %}
+  <script src="{{url_for('static', filename='js/comisiones.js')}}"></script>
+  {% endblock %}
+</div>

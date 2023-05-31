@@ -4,7 +4,6 @@ from wtforms import (
     SubmitField,
     SelectField,
     DateField,
-    BooleanField,
     RadioField,
 )
 from wtforms.validators import DataRequired
@@ -15,6 +14,7 @@ class CreateInformeForm(FlaskForm):
     fecha_inicio = DateField("Fecha de inicio", validators=[DataRequired()])
     fecha_fin = DateField("Fecha de fin", validators=[DataRequired()])
     miembro = SelectField("Miembros", validators=[DataRequired()])
+    tratamiento = StringField("Tratamiento", validators=[DataRequired()])
     tipo_informe = RadioField(
         "Tipo",
         choices=[
@@ -22,6 +22,11 @@ class CreateInformeForm(FlaskForm):
             ("escuela", "Pertenencia Junta Escuela"),
         ],
         default="comision",
+    )
+    formato_informe = RadioField(
+        "Formato",
+        choices=[("pdf", "PDF"), ("docx", "DOCX")],
+        default="pdf",
     )
 
     submit = SubmitField("Generar informe")

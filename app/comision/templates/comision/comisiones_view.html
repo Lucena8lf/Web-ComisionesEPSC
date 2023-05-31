@@ -9,11 +9,11 @@
             <svg class="add-svg" fill="#000000" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40px" height="40px" viewBox="0 0 1 1" enable-background="new 0 0 20 20" xml:space="preserve"><path d="M0.95 1H0.05A0.048 0.048 0 0 1 0 0.95V0.05A0.048 0.048 0 0 1 0.05 0h0.9a0.048 0.048 0 0 1 0.05 0.05v0.9a0.048 0.048 0 0 1 -0.05 0.05zM0.1 0.9h0.8v-0.8h-0.8v0.8z"/><path points="14,9 11,9 11,6 9,6 9,9 6,9 6,11 9,11 9,14 11,14 11,11 14,11 " d="M0.7 0.45H0.55V0.3H0.45v0.15H0.3v0.1h0.15v0.15h0.1V0.55h0.15Z"/></svg>
         </a>
     </div>
-    {% if not comisiones %}
+    {% if not comisiones_pagination.items %}
     <p>No hay comisiones que consultar</p>
     {% else %}
     <ul class="list-group list-comisiones">
-        {% for comision in comisiones %}
+        {% for comision in comisiones_pagination.items %}
         <li class="list-group-item d-flex align-items-center pt-3 pb-1 list-comisiones">
             <span class="nombre-miembro"> {{comision.nombre}} </span>
             <a target="_parent" href="{{url_for('comision.consult_comision', id_comision=comision.id)}}">
@@ -42,6 +42,38 @@
         {% endfor %}
     </ul>
     {% endif %}
+
+    
+    <ul class="page">
+        {% if comisiones_pagination.has_prev %}
+            <a href="{{ url_for('comision.get_comisiones', page=comisiones_pagination.prev_num) }}">
+                <li class="page__btn">Anterior</li>
+            </a>
+        {% endif %}
+
+        {% for page in comisiones_pagination.iter_pages() %}
+            {% if page %}
+                {% if page == comisiones_pagination.page %}
+                    <li class="page__numbers active">{{ page }}</li>
+                {% else %}
+                <a href="{{ url_for('comision.get_comisiones', page=page) }}">
+                    <li class="page__numbers">
+                    {{ page }}
+                    </li>
+                </a>
+                {% endif %}
+            {% else %}
+                <li class="page__dots">...</li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if comisiones_pagination.has_next %}
+            <a href="{{ url_for('comision.get_comisiones', page=comisiones_pagination.next_num) }}">
+                <li class="page__btn">Siguiente</li>
+            </a>
+        {% endif %}
+    </ul>
+        
 </div>
 <script src="{{url_for('static', filename='js/comisiones-index.js')}}"></script>
 {% endblock %}

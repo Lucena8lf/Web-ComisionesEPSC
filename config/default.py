@@ -16,3 +16,7 @@ APP_ENV_DEVELOPMENT = "development"
 APP_ENV_STAGING = "staging"
 APP_ENV_PRODUCTION = "production"
 APP_ENV = ""
+
+# Paginación
+COMISIONES_PER_PAGE = 8
+MIEMBROS_PER_PAGE = 8

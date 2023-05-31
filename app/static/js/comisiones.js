@@ -27,9 +27,9 @@ function addMembersCreate() {
 
   // Creamos el nuevo select
   var newSelect = document.createElement("select");
-  newSelect.setAttribute("class", "form-control m-3");
   newSelect.setAttribute("id", "member-" + membersCount);
   newSelect.setAttribute("name", "miembros");
+  newSelect.setAttribute("class", "form-control m-3 input-nombre");
   newSelect.setAttribute("onchange", "checkRepeatedMembers(this)");
 
   // Agregamos las mismas opciones del último select al nuevo select
@@ -41,13 +41,22 @@ function addMembersCreate() {
     newSelect.add(option);
   }
 
+  // Creamos nuevo campo para el cargo desempeñado
+  var newCargo = document.createElement("input");
+  newCargo.setAttribute("id", "member-" + membersCount);
+  newCargo.setAttribute("name", "cargos");
+  newCargo.setAttribute("class", "form-control m-3");
+  newCargo.setAttribute("type", "text");
+  newCargo.setAttribute("placeholder", "Cargo desempeñado");
+
   // Incrementamos el contador de miembros
   membersCount++;
 
-  // Agregamos el nuevo select y un salto de línea
+  // Agregamos el nuevo select, el nuevo campo para el cargo y un salto de línea
   var formGroup = document.createElement("div");
   formGroup.setAttribute("class", "form-group d-flex align-items-center");
   formGroup.appendChild(newSelect);
+  formGroup.appendChild(newCargo);
 
   // Borramos el anterior botón antes de crear el nuevo
   document.getElementById("add-member-button").remove();
@@ -102,7 +111,7 @@ function addMembersUpdate() {
 
   // Creamos el nuevo select
   var newSelect = document.createElement("select");
-  newSelect.setAttribute("class", "form-control");
+  newSelect.setAttribute("class", "form-control input-nombre");
   newSelect.setAttribute("id", "member-" + membersCount);
   newSelect.setAttribute("name", "miembros");
   newSelect.setAttribute(
@@ -127,9 +136,9 @@ function addMembersUpdate() {
   formGroup.setAttribute("class", "form-group d-flex align-items-center");
   formGroup.appendChild(newSelect);
 
-  // Creamos los inputs de la fecha de incorporación y fecha de baja
+  // Creamos los inputs de la fecha de incorporación, fecha de baja y cargo desempeñado
   var newFechaIncorporacion = document.createElement("input");
-  newFechaIncorporacion.setAttribute("class", "form-control mx-2");
+  newFechaIncorporacion.setAttribute("class", "form-control mx-2 input-fecha");
   newFechaIncorporacion.setAttribute(
     "name",
     "fecha_incorporacion_nuevo_miembro"
@@ -144,7 +153,7 @@ function addMembersUpdate() {
   );
 
   var newFechaBaja = document.createElement("input");
-  newFechaBaja.setAttribute("class", "form-control mx-2");
+  newFechaBaja.setAttribute("class", "form-control mx-2 input-fecha");
   newFechaBaja.setAttribute("name", "fecha_baja_nuevo_miembro");
   newFechaBaja.setAttribute("type", "text");
   newFechaBaja.setAttribute("placeholder", "Fecha de baja");
@@ -152,11 +161,28 @@ function addMembersUpdate() {
   newFechaBaja.setAttribute("onblur", "(this.type='text')");
   newFechaBaja.setAttribute(
     "onchange",
-    "checkDate(this, document.getElementsByName('fecha_apertura')[0].value);"
+    "checkDate(this, document.getElementsByName('fecha_apertura')[0].value); disableUnsubscribeReason(this);"
   );
 
+  var newCargo = document.createElement("input");
+  newCargo.setAttribute("class", "form-control mx-2 input-cargo");
+  newCargo.setAttribute("name", "cargo_nuevo_miembro");
+  newCargo.setAttribute("type", "text");
+  newCargo.setAttribute("placeholder", "Cargo desempeñado");
+
+  var newMotivoBaja = document.createElement("input");
+  newMotivoBaja.setAttribute(
+    "class",
+    "form-control mx-2 input-motivoBaja isDisabled"
+  );
+  newMotivoBaja.setAttribute("name", "motivo_baja_nuevo_miembro");
+  newMotivoBaja.setAttribute("type", "text");
+  newMotivoBaja.setAttribute("placeholder", "Motivo de baja");
+
+  formGroup.appendChild(newCargo);
   formGroup.appendChild(newFechaIncorporacion);
   formGroup.appendChild(newFechaBaja);
+  formGroup.appendChild(newMotivoBaja);
 
   // Borramos el anterior botón antes de crear el nuevo
   document.getElementById("add-member-button").remove();
@@ -210,29 +236,39 @@ function setNewMemberId(select) {
   /*
   Función que será el controlador de eventos del select al seleccionar una opción.
   Es decir, cuando se seleccione una opción esta función se encargará de poner a los
-  dos inputs de fecha_incorporacion y fecha_baja como 'id' el siguiente formato:
-  '{id_miembro}-fecha_incorporacion_nuevo_miembro' o
-  '{id_miembro}-fecha_baja_nuevo_miembro'
+  inputs de cargo, fecha_incorporacion, fecha_baja y motivo_baja como 'id' el siguiente formato:
+  '{id_miembro}-cargo_nuevo_miembro'
+  '{id_miembro}-fecha_incorporacion_nuevo_miembro',
+  '{id_miembro}-fecha_baja_nuevo_miembro',
+  '{id_miembro}-motivo_baja_nuevo_miembro'
   (Actualizar comisión)
   */
 
   // Obtenemos el valor de la opción que ha seleccionado el usuario
-  var id_miembro = select.value; // Nos devuelve la ID del miembro
+  var idMiembro = select.value; // Nos devuelve la ID del miembro
 
   //console.log(selectedValue);
-  // Establecemos la ID a los dos campos inputs de la fecha de incorporación y la fecha de baja
+  // Establecemos la ID a los campos
+  const inputCargo = document.getElementsByName("cargo_nuevo_miembro")[
+    membersCount - 1
+  ];
   const inputFechaIncorporacion = document.getElementsByName(
     "fecha_incorporacion_nuevo_miembro"
   )[membersCount - 1];
   const inputFechaBaja = document.getElementsByName("fecha_baja_nuevo_miembro")[
     membersCount - 1
   ];
+  const inputMotivoBaja = document.getElementsByName(
+    "motivo_baja_nuevo_miembro"
+  )[membersCount - 1];
 
+  inputCargo.setAttribute("id", idMiembro + "-cargo_nuevo_miembro");
   inputFechaIncorporacion.setAttribute(
     "id",
-    id_miembro + "-fecha_incorporacion_nuevo_miembro"
+    idMiembro + "-fecha_incorporacion_nuevo_miembro"
   );
-  inputFechaBaja.setAttribute("id", id_miembro + "-fecha_baja_nuevo_miembro");
+  inputFechaBaja.setAttribute("id", idMiembro + "-fecha_baja_nuevo_miembro");
+  inputMotivoBaja.setAttribute("id", idMiembro + "-motivo_baja_nuevo_miembro");
 }
 
 function checkDate(fechaIntroducida, fechaApertura) {
@@ -389,4 +425,53 @@ function showAdviceOpeningDate() {
   }
 
   fechaAperturaAnterior = fechaAperturaNueva;
+}
+
+function disableUnsubscribeReason(fechaBaja, motivoBaja) {
+  /*
+  Función que deshabilita el campo "motivo de baja" si no se hay ya
+  establecida una fecha de baja para ese miembro.
+
+  Recibe como argumentos:
+    - Fecha de baja introducida para ese miembro
+    - Campo "motivo_baja" para ese miembro (Opcional)
+  (Actualizar comisión) 
+  */
+
+  // Si la función es llamada por un campo de un nuevo miembro el parámetro
+  // 'motivoBaja' no será pasado y se hallará el campo de motivo de baja de ese
+  // miembro dentro de la función
+  motivoBaja = motivoBaja || 0;
+
+  if (motivoBaja === 0) {
+    // Hallamos el campo de motivo de baja para ese miembro a partir de la ID
+    const idMiembro = fechaBaja.id.split("-")[0];
+    if (idMiembro === "") {
+      // Evitamos que introduzca la fecha de baja antes de indicar el miembro
+      Swal.fire({
+        text: "Por favor, indique el miembro antes de establecer la fecha de baja",
+        icon: "info",
+        confirmButtonText: "Aceptar",
+      });
+      fechaBaja.value = "";
+      return;
+    }
+    motivoBaja = document.getElementById(
+      idMiembro + "-motivo_baja_nuevo_miembro"
+    );
+  }
+
+  let fechaBajaObj = fechaBaja.value;
+  let motivoBajaClass = motivoBaja.getAttribute("class");
+
+  if (fechaBajaObj === "") {
+    // Desactivamos el campo si no hay fecha de baja
+    let motivoBajaNewClass = motivoBajaClass + " isDisabled";
+    motivoBaja.setAttribute("class", motivoBajaNewClass);
+  } else {
+    // Lo activamos si introduce una fecha de baja
+    // Sólo le quitamos la clase "isDisabled"
+    let motivoBajaNewClass = motivoBajaClass.replace(/\bisDisabled\b/, "");
+    motivoBaja.setAttribute("class", motivoBajaNewClass);
+  }
 }
