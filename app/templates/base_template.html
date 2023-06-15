@@ -7,7 +7,7 @@
     <title>{% block title %} {% endblock %}</title>
 
 	<!-- BOOTSTRAP -->
-	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}"> </link>
+	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap/bootstrap.min.css')}}"> </link>
 
 	<!-- MAIN.CSS-->
 	<link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}"> </link>
@@ -59,7 +59,7 @@
                 <a class="nav-link" href="{{ url_for('informe.generate_informe') }}">Informes</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('informe.generate_informe') }}">Exportar</a>
+                <a class="nav-link" href="{{ url_for('informe.export_csv') }}">Exportar</a>
               </li>
               {% if not current_user.is_anonymous %} 
               <li class="nav-item dropdown user-options-navbar d-flex justify-content-end">
@@ -82,7 +82,7 @@
 {% block content %} {% endblock %}
 
 <!-- SCRIPTS BOOTSTRAP -->
-<script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/bootstrap/bootstrap.min.js')}}"></script>
 
 <!-- SweetAlert2 -->
 <script src="{{url_for('static', filename='js/sweetalert2.all.min.js')}}"></script>

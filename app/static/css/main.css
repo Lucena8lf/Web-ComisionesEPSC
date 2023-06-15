@@ -185,12 +185,35 @@ li:last-child {
   }
 }
 
+/* Para móviles la carta ocupará todo el ancho */
+@media only screen and (max-width: 768px) {
+  .member-card {
+    width: 100%;
+  }
+}
+
 /* --- */
 
 .members-comission {
   display: flex;
   /*max-width: 62%;*/
   max-width: 80%;
+}
+
+/* Cambiamos la disposición de los campos al editar la comisión en dispositivos móviles */
+@media only screen and (max-width: 768px) {
+  .members-comission {
+    display: block;
+  }
+
+  .input-cargo, .input-fecha, .input-motivoBaja {
+    margin: 10px 0 10px 0 !important;
+  }
+
+  .new-member {
+    display: block !important;
+    margin-top: 10px;
+  }
 }
 
 #members-form {
@@ -241,13 +264,27 @@ div.members-comission input {
   margin-top: 10px;
 }
 
+/* Ocultamos los campos en dispositivos móviles */
+@media only screen and (max-width: 768px) {
+  .column {
+    display: none;
+  }
+}
+
+/* Cerrar comision */
+@media only screen and (max-width: 768px) {
+  #buttons-container {
+    display: grid;
+  }
+}
+
 /* Login */
 .login {
   min-height: 100vh;
 }
 
 .bg-image {
-  background-image: url("/static/images/logo.png");
+  background-image: url("/static/images/logotipo-EPSC.png");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;

@@ -54,7 +54,10 @@ function addMembersCreate() {
 
   // Agregamos el nuevo select, el nuevo campo para el cargo y un salto de línea
   var formGroup = document.createElement("div");
-  formGroup.setAttribute("class", "form-group d-flex align-items-center");
+  formGroup.setAttribute(
+    "class",
+    "form-group d-flex align-items-center new-member"
+  );
   formGroup.appendChild(newSelect);
   formGroup.appendChild(newCargo);
 
@@ -133,7 +136,10 @@ function addMembersUpdate() {
 
   // Agregamos el nuevo select y un salto de línea
   var formGroup = document.createElement("div");
-  formGroup.setAttribute("class", "form-group d-flex align-items-center");
+  formGroup.setAttribute(
+    "class",
+    "form-group d-flex align-items-center new-member"
+  );
   formGroup.appendChild(newSelect);
 
   // Creamos los inputs de la fecha de incorporación, fecha de baja y cargo desempeñado

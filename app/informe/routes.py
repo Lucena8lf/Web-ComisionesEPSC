@@ -433,9 +433,9 @@ def informe_comisiones_docx(
 
     # Creamos la respuesta del archivo adjunto
     response = make_response(output.getvalue())
-    response.headers[
-        "Content-Disposition"
-    ] = "attachment; filename=certificado_comisiones.docx"
+    apellidos = "_".join(miembro.apellidos.split(" "))
+    filename = f"certificado_comisiones_{miembro.nombre}_{apellidos}.docx"
+    response.headers["Content-Disposition"] = f"attachment; filename={filename}"
     response.headers[
         "Content-Type"
     ] = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -564,9 +564,9 @@ def informe_escuela_docx(secretario, fecha_inicio, fecha_fin, tratamiento, id_mi
 
     # Creamos la respuesta del archivo adjunto
     response = make_response(output.getvalue())
-    response.headers[
-        "Content-Disposition"
-    ] = "attachment; filename=certificado_junta_escuela.docx"
+    apellidos = "_".join(miembro.apellidos.split(" "))
+    filename = f"certificado_junta_escuela_{miembro.nombre}_{apellidos}.docx"
+    response.headers["Content-Disposition"] = f"attachment; filename={filename}"
     response.headers[
         "Content-Type"
     ] = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"

@@ -4,5 +4,5 @@ __pycache__
 # Enviroment
 env
 
-# Flask stuff
-instance
+# Flask-Migrate
+migrations

@@ -75,7 +75,7 @@
                 <!-- Miembros que se podrían añadir -->
                 <div class="form-group d-flex align-items-center members-group">
                     <div id="members-form">
-                        <div class="form-group d-flex align-items-center mb-3" id="members-0">
+                        <div class="form-group d-flex align-items-center mb-3 new-member" id="members-0">
                             <select id="member-0" name="miembros" class="form-control input-nombre" onchange="setNewMemberId(this); assignCurrentDate(this)">
                                 {% for miembro in miembros %}
                                   <option value="{{ miembro[0] }}">{{ miembro[1] }} {{ miembro[2] }}</option>
