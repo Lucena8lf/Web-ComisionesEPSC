@@ -47,12 +47,62 @@ Se han utilizado las siguientes tecnologías para su desarrollo:
 - CSS3
 - Javascript
 
-<!--
-## Descarga e instalación del proyecto
-    ### Variables de entorno
-    ### Instalación de dependencias
+## Instalación
 
-## Ejecución con el servidor nativo de Flask
+### Descarga del proyecto
 
-In process...
--->
+Para llevar a cabo la instalación primero se debe descargar el proyecto y para ello se clonará el repositorio:
+
+```sh
+git clone https://github.com/Lucena8lf/Web-ComisionesEPSC.git
+```
+
+Esto dejara una carpeta llamada ’Web-ComisionesEPSC’ que es la que contiene el proyecto.
+
+### Variables de entorno
+
+Para que la aplicación funcione deben ser creadas variables de entorno. Para ello será
+necesario abrir una terminal, situarse dentro del directorio generado al clonar el repositorio
+y ejecutar los siguientes comandos dependiendo del sistema operativo:
+
+#### Linux/Mac
+
+```sh
+export FLASK_APP="entrypoint"
+export FLASK_ENV="production"
+export APP_SETTINGS_MODULE="config.local"
+```
+
+#### Windows
+
+```sh
+set FLASK_APP="entrypoint"
+set FLASK_ENV="production"
+set APP_SETTINGS_MODULE="config.local"
+```
+
+> Nota: si se está usando virtualenv es recomendable añadir esas variables
+> al fichero que activa el entorno virtual. Dependiendo del sistema operativo
+> éste puede ser “activate“, “activate.bat“, “activate.ps1“, etc.
+
+### Instalación de dependencias
+
+Por último, se instalarán las dependencias. Para ello el proyecto cuenta con el fichero
+“requirements.txt“ que contiene la lista de dependencias requeridas por la aplicación. Para
+instalarlas se deberá ejecutar:
+
+```sh
+pip install -r requirements.txt
+```
+
+### Ejecución de la aplicación
+
+Una vez completados todos los pasos ya se tendría todo lo necesario para ejecutar la
+aplicación. Por lo tanto para arrancar el proyecto se ejecutará el siguiente comando:
+
+```sh
+flask run
+```
+
+Tras ello ya se encontraría la aplicación ejecutada y se podrá acceder a ella a través de
+un navegador web accediendo a la dirección http://localhost:5000/.

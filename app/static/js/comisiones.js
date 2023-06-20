@@ -36,8 +36,8 @@ function addMembersCreate() {
   var options = lastSelect.options;
   for (var i = 0; i < options.length; i++) {
     var option = document.createElement("option");
-    option.text = options[i].text; // Fernando
-    option.value = options[i].value; // 1
+    option.text = options[i].text;
+    option.value = options[i].value;
     newSelect.add(option);
   }
 

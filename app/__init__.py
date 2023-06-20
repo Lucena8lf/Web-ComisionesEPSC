@@ -1,8 +1,3 @@
-# Este fichero contiene métodos factoría para crear e inicializar la app y los
-# distintos componentes y extensiones. (Aquí se suele definir un método factoría para
-# crear la `app`, inicializar las diferentes extensiones,
-# como el LoginManager() o el SQLAlchemy(), y registrar los blueprints)
-
 import os
 
 from flask import Flask, render_template
@@ -22,17 +17,6 @@ def create_app(settings_module):
     # Método factoria que inicializa la app
 
     app = Flask(__name__, instance_relative_config=True)
-
-    # --- Configuración antigua --- #
-    # app.config[
-    #    "SECRET_KEY"
-    # ] = "7110c8ae51a4b5af97be6534caef90e4bb9bdcb3380af008f90b23a5d1616bf319bc298105da20fe"
-    #
-    # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
-    #    app.root_path, "database", "comisiones.db"
-    # )
-    # app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    # --- Configuración antigua --- #
 
     # Cargamos el archivo de configuración indicado por la variable de entorno APP
     app.config.from_object(settings_module)

@@ -53,15 +53,15 @@
                         <div class="form-group">
                             {{ form.correo.label(class_='form-label mt-2') }}
                             {{ form.correo(class_='form-control') }}
-                            {% for error in form.correo.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
+                            {% if correo_error %}
+                                <span style="color: red;">{{ correo_error }}</span>
+                            {% endif %}
                         </div>
                         <div class="form-group">
                             {{ form.telefono.label(class_='form-label mt-4') }}
                             {{ form.telefono(class_='form-control') }}
-                            {% if error %}
-                                <span style="color: red;">{{ error }}</span>
+                            {% if telefono_error %}
+                                <span style="color: red;">{{ telefono_error }}</span>
                             {% endif %}
                         </div>
                     </div>

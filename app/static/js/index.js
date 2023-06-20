@@ -1,21 +1,3 @@
-/*
-
-document.querySelectorAll(".box").forEach((box) => {
-  box.addEventListener("click", (e) => {
-    e.preventDefault();
-    let info = document.getElementById("info");
-    info.innerHTML = "<p>Cargando información...</p>";
-    fetch(e.target.href)
-      .then((response) => response.text())
-      .then((html) => {
-        info.innerHTML = html;
-      });
-  });
-});
-*/
-//alert("hola");
-//import { mostrarCuadroMiembro } from "./miembros_index";
-
 function inicializarCuadros() {
   var cuadros = document.querySelectorAll(".box");
   var info = document.getElementById("info");
@@ -29,7 +11,6 @@ function inicializarCuadros() {
         var url = this.getAttribute("href"); // Obtiene el valor del atributo href
         // Borramos el texto que hay si existe y hacemos el iframe
         if (textoIndex) {
-          //document.getElementById("texto-index").remove();
           textoIndex.style.display = "none";
         }
         const iframe = document.getElementById("iframe-index");
@@ -39,7 +20,6 @@ function inicializarCuadros() {
         // se cambia el mensaje de bienvenida del cuadro
         if (cuadro.classList.contains("box-exportar")) {
           iframe.style.display = "none";
-          //textoIndex.style.display = "";
           const loadingMessage = document.getElementById("loading-message");
           // Metemos el HTML dentro de ese div
           loadingMessage.innerHTML =
@@ -71,14 +51,6 @@ function inicializarCuadros() {
             spinner.remove();
           };
         }
-
-        /*
-        fetch(href)
-          .then((response) => response.text())
-          .then((html) => {
-            info.innerHTML = html;
-          }); // Carga la vista en el div info
-          */
       });
     }
   });

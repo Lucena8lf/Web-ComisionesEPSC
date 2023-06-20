@@ -349,18 +349,6 @@ div.members-comission input {
 }
 
 /* 404 */
-/*
-.notfound .notfound-404{
-  position:absolute;
-  left:0;
-  top:0;
-  display:inline-block;
-  width:140px;
-  height:140px;
-  background-image:url(../images/logo.png);
-  background-size:cover
-}
-*/
 .bg-overlay {
   position: absolute;
   top: 0;

@@ -42,6 +42,9 @@ import os
 @informe_bp.route("/informes", methods=["GET", "POST"])
 @login_required
 def generate_informe():
+    """
+    Ruta para generar un informe
+    """
     form = CreateInformeForm()
 
     # Las opciones del select serán todos los miembros ya estén activos o no
@@ -126,10 +129,9 @@ def informe_comisiones(secretario, fecha_inicio, fecha_fin, tratamiento, id_miem
     """
     # A partir de la ID del miembro recuperamos todos sus datos y las comisiones a las
     # que ha perteneceido durante todo ese tiempo
-    miembro = Miembro.get_by_id(id_miembro)  # Aquí ya tenemos todos sus datos
+    miembro = Miembro.get_by_id(id_miembro)
 
     # Ahora recuperamos todas las comisiones a las que ha pertenecido durante todo ese tiempo
-    # Usamos 'select' de SQLAlchemy aquí para mejorar la claridad de la setencia
     comisiones = db.session.execute(
         select(
             miembros_comisiones.columns.id_comision,
@@ -168,7 +170,6 @@ def informe_comisiones(secretario, fecha_inicio, fecha_fin, tratamiento, id_miem
     # Ordenamos la lista de manera ascendente en función de la fecha de inicio
     comisiones_con_nombre = sorted(comisiones_con_nombre, key=lambda tupla: tupla[1])
 
-    # print("Comisiones con nombre -> ", comisiones_con_nombre)
     # Borramos la comisión 'Junta de Escuela' si existe ya que no pertenece a este informe
     for tupla in comisiones_con_nombre:
         if tupla[3] == "Junta de Escuela":
@@ -241,7 +242,6 @@ def informe_escuela(secretario, fecha_inicio, fecha_fin, tratamiento, id_miembro
             "error",
         )
         return redirect(url_for("informe.generate_informe"))
-        # return "Parece que este miembro no pertenece ni ha pertenecido nunca a 'Junta de Escuela'"
 
     # Obtenemos el HTML
     html = render_template(
@@ -577,30 +577,11 @@ def informe_escuela_docx(secretario, fecha_inicio, fecha_fin, tratamiento, id_mi
 @informe_bp.route("/export/csv")
 @login_required
 def export_csv():
+    """
+    Ruta para exportar datos a fichero CSV
+    """
+
     # Obtenemos los datos que queremos exportar al CSV
-
-    # SELECT mc.id, c.nombre, c.comentarios, m.dni, m.apellidos, m.nombre, m.tipo, mc.fecha_incorporacion,
-    # mc.fecha_baja, mc.motivo_baja, mc.cargo FROM miembros_comisiones mc, comision c, miembro m
-    # WHERE mc.id_miembro=m.id AND mc.id_comision=c.id;
-
-    # resulttt = db.session.execute(
-    #    select(
-    #        Comision.nombre,
-    #        Comision.comentarios,
-    #        Miembro.dni,
-    #        Miembro.apellidos,
-    #        Miembro.nombre,
-    #        Miembro.tipo,
-    #        miembros_comisiones.columns.fecha_incorporacion,
-    #        miembros_comisiones.columns.fecha_baja,
-    #        miembros_comisiones.columns.motivo_baja,
-    #        miembros_comisiones.columns.cargo,
-    #    ).where(
-    #        miembros_comisiones.columns.id_comision == Comision.id,
-    #        miembros_comisiones.columns.id_miembro == Miembro.id,
-    #    )
-    # ).fetchall()
-
     result = (
         db.session.query(
             Comision.nombre,
@@ -618,8 +599,6 @@ def export_csv():
         .join(Comision, miembros_comisiones.c.id_comision == Comision.id)
         .order_by(Comision.nombre)
     ).all()
-
-    # print(len(result))
 
     # Exportamos ese resultado a un CSV
     output = io.StringIO()
@@ -641,25 +620,7 @@ def export_csv():
     writer.writerow(header)
 
     # Insertamos las filas
-    # Cambiar todos los tipos 'Datetime' de los modelos por 'Date' y modificar los que tengan
-    # 'default=datetime.datetime.utcnow' por 'default=date.today()'
     for row in result:
-        # fecha_incorporacion = row.fecha_incorporacion.date()
-        # if row.fecha_baja:
-        #    fecha_baja = row.fecha_baja.date()
-        # modified_row = (
-        #    row.nombre,
-        #    row.comentarios,
-        #    row.dni,
-        #    row.apellidos,
-        #    row.nombre,
-        #    row.tipo,
-        #    fecha_incorporacion,
-        #    fecha_baja,
-        #    row.motivo_baja,
-        #    row.cargo,
-        # )
-        # writer.writerow(modified_row)
         writer.writerow(row)
 
     # Reiniciamos posición del puntero
@@ -675,5 +636,3 @@ def export_csv():
         mimetype="text/csv",
         headers={"Content-Disposition": "attachment;filename=comisiones.csv"},
     )
-
-    return render_template("informe/csv_view.html", result=result)

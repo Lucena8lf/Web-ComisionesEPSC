@@ -44,8 +44,6 @@ class Comision(db.Model):
                 # en la tabla 'miembros_comisiones'. Se añaden tantas tuplas en la tabla
                 # como miembros haya querido añadir el usuario
 
-                # self.miembros.extend(miembros)
-
                 for miembro_id in miembros:
                     # Vemos si el miembro existe (que sea activo ya lo hemos asegurado antes)
                     miembro = Miembro.get_by_id(miembro_id[0])
@@ -72,8 +70,8 @@ class Comision(db.Model):
     def close(self, fecha_cierre, miembros_comision):
         """
         Método para cerrar una comisión
-            :param Fecha_cierre: fecha de cierre que el usuario ha decidido para la comisión
-            :param Miembros_comisión: lista de los IDs de todos los miembros que pertenecen a esa comisión
+            :param fecha_cierre: fecha de cierre que el usuario ha decidido para la comisión
+            :param miembros_comisión: lista de los IDs de todos los miembros que pertenecen a esa comisión
         """
         # La comisión no es borrada como tal, sino que se setea su fecha de cierre
         self.fecha_cierre = fecha_cierre
@@ -164,20 +162,8 @@ class Comision(db.Model):
         message = None
         formato = "%Y-%m-%d"  # Formato para formatear fechas
 
-        # IDEA:
-        # Ahora la lista 'fechas_incorporacion_nuevas' vendrá formada por (id_tupla, fecha_incorporacion)
-        # Ahora todo se facilita ya que identificamos por la ID y no por 'id_miembro' e 'id_comision'
-        # Idem para la lista 'fechas_baja_nuevas'
-        # ---
-        # Recuerda que estas dos listas son para modificar una fecha de incorporación o una fecha de baja
-        # ya existentes, es decir, la tupla ya existe y por ese nos llega su ID.
-        #
-        # Lo primero es cambiar el modelo de la tabla 'miembros_comisiones' para que tenga un campo 'id'
-        # como clave primaria, ya los otros dos no serán clave primaria
-
         # Primero comprobamos si se ha modificado una fecha de incorporación a alguno de los
         # miembros ya existentes
-        print("fechas incorporacion nuevas -> ", fechas_incorporacion_nuevas)
         if fechas_incorporacion_nuevas:
             # La lista tiene tuplas de la forma: (id_tupla, fecha_incorporacion)
             for element in fechas_incorporacion_nuevas:
@@ -191,20 +177,14 @@ class Comision(db.Model):
                     },
                 ).fetchone()
 
-                # print("Fecha baja -> ", fecha_baja)
-                # print(f"Fecha baja {fecha_baja[0]} del miembro {fecha_baja[1]}")
-
                 id_miembro = fecha_baja[1]
 
                 # Comprobamos si esa fecha es posterior a la fecha de incorporación que quiere establecer
-                print("fecha_baja[0] -> ", fecha_baja[0])
-                print("element[1] -> ", element[1])
                 if not fecha_baja[0] or fecha_baja[0] > element[1]:
                     # Comprobamos también que la fecha de incorporación que actualiza sea posterior a la última
                     # fecha de baja de ese miembro en la comisión
                     # Solo comprobamos esto en tuplas ya completas y pasadas, es decir, en las que
                     # ya se ha incorporado y dado de baja el miembro
-                    # ...
                     if not fecha_baja[0]:
                         last_fecha_baja = db.session.execute(
                             db.text(
@@ -215,7 +195,7 @@ class Comision(db.Model):
                                 "id_comision": self.id,
                             },
                         ).first()
-                        print("Tipo last_fecha_baja -> ", type(last_fecha_baja[0]))
+
                         if last_fecha_baja[0]:
                             last_fecha_baja = datetime.datetime.strptime(
                                 last_fecha_baja[0], formato
@@ -228,7 +208,6 @@ class Comision(db.Model):
                         # es decir, que last_fecha_baja=None
                         #
                         # La fecha de incorporación es un str por lo que lo debemos convertir para compararlo
-                        print("Tipo element[1] -> ", type(element[1]))
                         if (
                             last_fecha_baja is None
                             or datetime.datetime.strptime(element[1], formato).date()
@@ -261,7 +240,6 @@ class Comision(db.Model):
 
         # Ahora comprobamos si se ha añadido una fecha de baja de alguno de los miembros
         # ya existentes
-        print("fechas baja nuevas -> ", fechas_baja_nuevas)
         if fechas_baja_nuevas:
             # La lista tiene tuplas de la forma: (id_tupla, fecha_baja)
             for element in fechas_baja_nuevas:
@@ -277,19 +255,9 @@ class Comision(db.Model):
 
                 id_miembro = fecha_incorporacion[1]
 
-                print("Tenemos fechas de bajas nuevas...")
-                print("fecha_incorporacion -> ", fecha_incorporacion)
-                print("fecha_incorporacion[0] -> ", fecha_incorporacion[0])
                 # Comprobamos si esa fecha es anterior a la fecha de baja que quiere establecer
                 if fecha_incorporacion and fecha_incorporacion[0] < element[1]:
-                    # Comprobamos también que la fecha de baja que actualiza sea posterior a la última
-                    # fecha de baja de ese miembro en la comisión
-                    # Es necesario comprobar esto en tuplas ya completas y pasadas, es decir, en las que
-                    # ya se ha incorporado y dado de baja el miembro?
-                    # ...
-
-                    # Aquí no hace falta ni comprobarlo ¿Por qué?
-                    # Porque ya comprobamos que la fecha de incorporación es posterior a la última fecha
+                    # Ya comprobamos que la fecha de incorporación es posterior a la última fecha
                     # de baja, y se comprueba que la fecha de baja siempre es posterior a la de incorporación
                     db.session.execute(
                         db.text(
@@ -335,7 +303,6 @@ class Comision(db.Model):
                 if miembro_data[0] == "":
                     # Por si ha añadido un miembro vacío
                     continue
-                print("Miembro data -> ", miembro_data)
                 miembro = Miembro.get_by_id(miembro_data[0])
                 # Ambas fechas se nos pasan como string, por lo que para compararlas las pasamos a tipo datetime.date
                 miembro_date_incorporacion = datetime.datetime.strptime(
@@ -360,10 +327,6 @@ class Comision(db.Model):
                             "id_comision": self.id,
                         },
                     ).first()
-
-                    print(
-                        f"Ultima fecha de baja del miembro {miembro.id} -> {last_fecha_baja[0]}"
-                    )
 
                     if last_fecha_baja[0]:
                         last_fecha_baja = datetime.datetime.strptime(
@@ -419,12 +382,10 @@ class Comision(db.Model):
         Si ha cambiado la fecha de apertura comprobamos que todos los miembros que tengan
         su fecha de incorporación ANTERIOR a esta fecha de apertura, se establezca por defecto
         que tenga como fecha de incorporación la fecha de apertura de la comisión
+            :param new_fecha_apertura: nueva fecha de apertura para la comisión
         """
-        # Comprobamos todas las tuplas de 'miembros_comisiones' y vemos todas las que
-        # tengan id_comision=self.id y fecha_incorporacion < new_fecha_apertura. Esas serán las tuplas
-        # que deberemos establecer como fecha_incorporacion = new_fecha_apertura
 
-        # Obtenemos las IDs de los miembros de la comisión qeu tienen su fecha_incorporacion < new_fecha_apertura
+        # Obtenemos las IDs de los miembros de la comisión que tienen su fecha_incorporacion < new_fecha_apertura
         ids_miembros = db.session.execute(
             db.text(
                 "SELECT id_miembro FROM miembros_comisiones WHERE id_comision=(:id_comision) AND fecha_incorporacion < (:fecha_apertura)"

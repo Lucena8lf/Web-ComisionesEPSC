@@ -25,8 +25,9 @@ from unidecode import unidecode
 @comision_bp.route("/comisiones")
 @login_required
 def get_comisiones():
-    # comisiones = Comision.query.all()
-    # return render_template("comision/comisiones_view.html", comisiones=comisiones)
+    """
+    Ruta para obtener todas las comisiones
+    """
     page = int(request.args.get("page", 1))
     per_page = current_app.config["COMISIONES_PER_PAGE"]
     comisiones_pagination = Comision.get_all_paginated(page, per_page)
@@ -38,6 +39,9 @@ def get_comisiones():
 @comision_bp.route("/comisiones/crear", methods=["GET", "POST"])
 @login_required
 def create_comision():
+    """
+    Ruta para crear una nueva comisión
+    """
     form = CreateComisionForm()
     error = None
 
@@ -59,7 +63,6 @@ def create_comision():
         fecha_apertura = form.fecha_apertura.data
         id_miembros = request.form.getlist("miembros")
         cargos = request.form.getlist("cargos")
-        print("Cargos -> ", cargos)
 
         # Si ha seleccionado uno o más miembros...
 
@@ -105,6 +108,11 @@ def create_comision():
 @comision_bp.route("/comisiones/<int:id_comision>/cerrar", methods=["GET", "POST"])
 @login_required
 def cerrar_comision(id_comision):
+    """
+    Ruta para cerrar una comisión
+        :param id_comision: ID de la comisión que se desea cerrar
+    """
+
     comision = Comision.get_by_id(id_comision)
 
     # Muestra un formulario de dos campos
@@ -120,7 +128,6 @@ def cerrar_comision(id_comision):
         fecha_cierre = form.fecha_cierre.data
 
         # Comprobamos que el nombre introducido sea correcto
-        # Es decir, que sea igual que el de la ID que tenemos
         comision_real = Comision.get_by_id(id_comision)
         comision_introducida = Comision.get_by_nombre(nombre)
         # Al comparar los nombres aplicamos case insensitive y eliminamos los acentos
@@ -165,12 +172,15 @@ def cerrar_comision(id_comision):
 @comision_bp.route("/comisiones/<int:id_comision>", methods=["GET"])
 @login_required
 def consult_comision(id_comision):
+    """
+    Ruta para consultar los datos de una comisión
+        :param id_comision: ID de la comisión que se desea consultar
+    """
+
     # A la vista le pasamos tanto la comisión como una lista con todos los miembros
     # de esa comisión (la lista contendrá los IDs de cada miembro)
     comision = Comision.get_by_id(id_comision)
 
-    # Con 'miembro.id_miembro' le decimos que recorra todos los resultados de la
-    # consulta de abajo y extraiga el valor de la columna 'id_miembro'
     data_miembros_comision = [
         (
             miembro.id_miembro,
@@ -193,24 +203,19 @@ def consult_comision(id_comision):
     # A partir de esta lista (ID, fecha_incorporacion, fecha_baja, cargo, motivo_baja) que está ordenada en el orden
     # en el que el usuario ha ido incorporando miembros a la comisión.
 
-    # Creamos un diccionario para asociar la ID de cada miembro a su nombre completo. Así uniremos
-    # el nombre completo de cada miembro a la lista anterior de tuplas usando diccionarios
-    # para relacionar la información -> (ID_listaTuplas -> ID_nombreCompleto)
-    # creamos el diccionario "nombres_completos"
+    # Creamos un diccionario para asociar la ID de cada miembro a su nombre completo.
+    # Creamos el diccionario "nombres_completos"
     nombres_completos = {}
     for miembro in Miembro.query.all():
         id_miembro = miembro.id
         nombre_completo = miembro.nombre + " " + miembro.apellidos
         nombres_completos[id_miembro] = nombre_completo
 
-    # Suponiendo que data_miembros_comision es una lista de tuplas donde cada tupla tiene 5 elementos: ID, fecha_incorporación, fecha_baja, cargo, motivo_baja
+    # data_miembros_comision es una lista de tuplas donde cada tupla tiene 5 elementos: ID, fecha_incorporación, fecha_baja, cargo, motivo_baja
     for i in range(len(data_miembros_comision)):
         id_miembro = data_miembros_comision[i][0]
         nombre_completo = nombres_completos.get(id_miembro, "")
         data_miembros_comision[i] = data_miembros_comision[i] + (nombre_completo,)
-
-    # print("Nombres_completos -> ", nombres_completos)
-    # print("Data_miembros_comision -> ", data_miembros_comision)
 
     return render_template(
         "comision/comisionInformation_view.html",
@@ -259,7 +264,7 @@ def update_comision(id_comision):
         nombre_completo = miembro.nombre + " " + miembro.apellidos
         nombres_completos[id_miembro] = nombre_completo
 
-    # Suponiendo que data_miembros_comision es una lista de tuplas donde cada tupla tiene 6 elementos:
+    # data_miembros_comision es una lista de tuplas donde cada tupla tiene 6 elementos:
     # (ID, id_miembro, fecha_incorporación, fecha_baja, cargo, motivo_baja)
     for i in range(len(data_miembros_comision)):
         id_miembro = data_miembros_comision[i][1]
@@ -267,7 +272,6 @@ def update_comision(id_comision):
         data_miembros_comision[i] = data_miembros_comision[i] + (nombre_completo,)
 
     # --- #
-    print("data miembros comision -> ", data_miembros_comision)
 
     # Obtenemos todos los miembros activos que son los que se pueden añadir a la comisión
     # A diferencia de crear la comisión, ahora sólo obtenemos los miembros activos
@@ -292,8 +296,6 @@ def update_comision(id_comision):
     # Usamos populate_obj pero esto solo actualiza los campos que tiene el wtform,
     # nos lo que manejamos aparte como son los select
     if request.method == "POST" and form.validate_on_submit:
-        # Manejo de errores al introducir datos (fecha_baja > fecha_incorporacion, nombre repetido, etc.)
-        # ...
         # Comprobamos que no haya introducido una comisión con un nombre ya existente
         new_nombre = form.nombre.data
         new_comentarios = form.comentarios.data
@@ -367,21 +369,14 @@ def update_comision(id_comision):
                     motivos_baja.append((id_tupla, motivo_baja))
                 else:
                     motivos_baja.append((id_tupla, None))
-                # Con las fechas de baja podríamos hacer lo mismo???
 
-        # POR AQUI...
         # --- Nuevos miembros ---
         #
         # Por otro lado, comprobamos si se ha añadido un nuevo miembro a esa comisión el
         # cual no estaba antes
         miembros_nuevos_id = request.form.getlist("miembros")
 
-        # Al añadirse un nuevo miembro:
-        #   - fecha_incorporacion: Obligatorio
-        #   - fecha_baja: Opcional (si no se introduce == None)
-        #   - cargo: Opcional (si no se introduce == None)
-        #   - motivo_baja: Opcional (si no se introduce == None)
-        # Por lo que al método de la base de datos le pasaremos una lista que esté formada
+        # Al método del modelo le pasaremos una lista que esté formada
         # por tuplas de 3 elementos (id_nuevo_miembro, fecha_incorporacion, fecha_baja, cargo, motivo_baja)
         # Primero obtenemos estos parámetros
         fechas_incorporacion_nuevo_miembro = request.form.getlist(
@@ -402,21 +397,6 @@ def update_comision(id_comision):
             )
         )
 
-        # print("Lista fechas de incorporación -> ", fechas_incorporacion)
-        # print("Lista fechas de baja -> ", fechas_baja)
-        print("Lista miembros nuevos -> ", miembros_nuevos)
-        # return render_template(
-        #    "comision/updateComision_view.html",
-        #    form=form,
-        #    comision=comision,
-        #    miembros=miembros_activos,
-        #    miembros_comision=miembros_comision,
-        # )
-
-        # 'fechas_incorporacion' nunca puede estar vacío ya que un miembro siempre tendrá una fecha de
-        # incorporación. Las fechas de baja y los miembros nuevos si pueden ser vacíos
-        # (A menos que la comisión esté vacía???)
-        #
         # Siempre vamos a pasar las listas de cargos modificados y motivos de baja modificados
         if not fechas_baja and miembros_nuevos[0][0] == "":
             # Sólo se ha modificado la fecha de incorporación de un miembro existente
@@ -429,7 +409,7 @@ def update_comision(id_comision):
                 flash(error_message, "error")
         elif fechas_baja and miembros_nuevos[0][0] == "":
             # Se ha dado de baja a un miembro existente pero no se ha añadido ningún
-            # miembro. (También se actualiza por si acaso las fechas de incorporación)
+            # miembro. (También se actualiza las fechas de incorporación)
             error_message = comision.update(
                 fechas_incorporacion_nuevas=fechas_incorporacion,
                 fechas_baja_nuevas=fechas_baja,
@@ -440,7 +420,7 @@ def update_comision(id_comision):
                 flash(error_message, "error")
         elif not fechas_baja and miembros_nuevos[0][0] != "":
             # NO se ha dado de baja a ningún miembro existente pero se ha añadido algún
-            # miembro nuevo (También se actualiza por si acaso las fechas de incorporación)
+            # miembro nuevo (También se actualiza las fechas de incorporación)
             error_message = comision.update(
                 fechas_incorporacion_nuevas=fechas_incorporacion,
                 cargos_nuevos=cargos,
@@ -478,7 +458,6 @@ def update_comision(id_comision):
             )
         return redirect(url_for("comision.consult_comision", id_comision=comision.id))
 
-    # print("Data_miembros ->", data_miembros_comision)
     return render_template(
         "comision/updateComision_view.html",
         form=form,

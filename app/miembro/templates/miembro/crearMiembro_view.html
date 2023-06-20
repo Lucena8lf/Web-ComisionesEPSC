@@ -48,10 +48,9 @@
           <div class="col-sm-6">
             <div class="form-group">
               {{ form.correo.label(class_='form-label mt-4') }} {{
-              form.correo(class_='form-control') }} {% for error in
-              form.correo.errors %}
-              <span style="color: red">{{ error }}</span>
-              {% endfor %}
+              form.correo(class_='form-control') }} {% if correo_error %}
+              <span style="color: red">{{ correo_error }}</span>
+              {% endif %}
             </div>
             <div class="form-group">
               {{ form.telefono.label(class_='form-label mt-4') }} {{

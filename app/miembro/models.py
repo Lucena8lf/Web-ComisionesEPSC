@@ -10,9 +10,6 @@ from sqlalchemy import UniqueConstraint
 
 import re
 
-# print("importing models from", __name__)
-
-# Cambiar de dni_miembro a id_miembro
 miembros_comisiones = db.Table(
     "miembros_comisiones",
     db.Column("id", db.Integer, primary_key=True),
@@ -37,7 +34,7 @@ class Miembro(db.Model):
     dni = db.Column(db.String(20), nullable=False)
     nombre = db.Column(db.String(80), nullable=False)
     apellidos = db.Column(db.String(128), nullable=False)
-    correo = db.Column(db.String(256), unique=True, nullable=True)
+    correo = db.Column(db.String(256), nullable=True)
     telefono = db.Column(db.Integer, nullable=True)
     tipo = db.Column(db.Enum("Estudiante", "PDI", "PAS", "Externo"), nullable=False)
     activo = db.Column(db.Boolean, default=True)
