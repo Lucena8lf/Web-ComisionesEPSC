@@ -1,4 +1,4 @@
-# Web Comisiones EPSC
+# Aplicación web para la gestión de comisiones en la EPSC
 
 ## Introducción
 
@@ -6,7 +6,7 @@ Este proyecto es mi Trabajo Fin de Grado (TFG) realizado para la Universidad de 
 
 ## Idea principal y objetivos
 
-Anteriormente la EPSC trabaja con su registro de comisiones de todos los profesores de manera local mediante una hoja de cálculo, lo que presenta dificultades de rendimiento, accesibilidad, etc. Lo que agrava un poco más este problema es que no solo debe mantener las comisiones de los profesores operativos, sino que este registro debe ser activo recogiendo a todos los miembros que han participado.
+Anteriormente la Escuela Politécnica Superior de Córdoba (EPSC) trabaja con su registro de comisiones de todos los profesores de manera local mediante una hoja de cálculo, lo que presenta dificultades de rendimiento, accesibilidad, etc. Lo que agrava un poco más este problema es que no solo debe mantener las comisiones de los profesores operativos, sino que este registro debe ser activo recogiendo a todos los miembros que han participado.
 
 Debido a todo ello, este proyecto fue realizado con el objetivo de crear una aplicación web que permita la gestión de las comisiones de la EPSC. Esta aplicación web tendrá el fin de dar una solución más óptima a la forma de trabajar de la EPSC actualmente que es operar en local mediante una hoja de cálculo.
 
@@ -19,14 +19,14 @@ el administrativo designado a este sector por parte de la Universidad de Córdob
 por lo que solo se tiene en cuenta un tipo de usuario.
 
 Se plantea también la posibilidad de generar los certificados en dos tipos de
-formatos y, además exportar los datos actuales que contenga la aplicación a formato
+formatos y, además exportar los datos que contenga la aplicación a formato
 CSV.
 
 ## 🔨Funcionalidades del proyecto
 
 La aplicación a desarrollar tendrá las siguientes características:
 
-- Acceso al sistema mediante usuario y contraseña.
+- Acceso al sistema mediante correo y contraseña.
 - Gestión de las diferentes comisiones (dar de alta, editar y cerrarlas).
 - Gestión de los miembros de las comisiones (dar de alta, modificar y dar de baja).
 - Gestión de la composición de las comisiones.

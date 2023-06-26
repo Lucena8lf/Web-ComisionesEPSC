@@ -38,7 +38,7 @@
 
         .logo {
             position: fixed;
-            top: 0;
+            top: -100px;
             right: 0;
             z-index: 9999;
             width: 430px;
@@ -59,7 +59,7 @@
         }
 
         .escuela-bottom-images-wrapper{
-            height: 450px;
+            height: 550px;
             position: relative;
             page-break-inside: avoid;
             bottom: 0;
@@ -72,7 +72,7 @@
 
         .container-below-image {
             margin-top: 100px;
-            padding-top: 200px;   
+            padding-top: 100px;   
         }
 
         .container-secretario,
@@ -119,7 +119,7 @@
         <div class="container-below-image">
             <div class="container-secretario">
                 <h3 class="lead text-justify">
-                    D.  {{secretario.upper()}}, SECRETARIO DE  LA  ESCUELA POLITÉCNICA SUPERIOR DE CÓRDOBA DE
+                    {{secretario.upper()}} SECRETARIO DE  LA  ESCUELA POLITÉCNICA SUPERIOR DE CÓRDOBA DE
                     LA UNIVERSIDAD DE CÓRDOBA
                 </h3>
             </div>
@@ -128,8 +128,7 @@
                 <p class="text-justify">Que <b>{{tratamiento.upper()}} {{miembro.nombre}} {{miembro.apellidos}}</b>, con DNI {{miembro.dni}}, es miembro de la Junta de Escuela de la Escuela Politécnica Superior de Córdoba desde {{comision[0] | datetime}} hasta {% if not comision[1] %} la actualidad. {% else %} el {{comision[1] | datetime}}. {% endif %}
                 </p>
                 <p>
-                    Y, para que conste y surta los efectos oportunos, firmo el presente certificado
-                    en Córdoba, a {{fecha_actual | datetime}}.
+                    Y, para que conste y surta los efectos oportunos, firmo el presente certificado.
                 </p>
             </div>
         </div>

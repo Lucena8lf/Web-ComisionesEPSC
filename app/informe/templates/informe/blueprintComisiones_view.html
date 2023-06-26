@@ -39,7 +39,7 @@
 
         .logo {
             position: fixed;
-            top: 0;
+            top: -100px;
             right: 0;
             z-index: 9999;
             width: 430px;
@@ -67,14 +67,16 @@
             bottom: 0;
         }
 
+        
         .comisiones-bottom-images-wrapper img{
             position: absolute;
             bottom: 0;
         }
+        
 
         .container-below-image {
             margin-top: 100px;
-            padding-top: 200px;   
+            padding-top: 100px;   
         }
 
         .container-secretario,
@@ -104,6 +106,7 @@
             text-indent: 20px;
             font-size: 18px;
             page-break-inside: avoid;
+            margin-right: 50px;
         }
 
         .container-comisiones p {
@@ -113,10 +116,10 @@
 
         .signature {
             padding-top: 100px;
-            /* Párrafo de firme en una nueva página */
+            /* Párrafo de firma en una nueva página */
             page-break-before: always;
         }
-  
+        
     </style>
 </head>
 <body>
@@ -125,7 +128,7 @@
         <div class="container-below-image">
             <div class="container-secretario">
                 <h3 class="lead text-justify">
-                    D. {{secretario.upper()}}, DE  LA  ESCUELA POLITÉCNICA SUPERIOR DE CÓRDOBA DE
+                    {{secretario.upper()}} DE  LA  ESCUELA POLITÉCNICA SUPERIOR DE CÓRDOBA DE
                     LA UNIVERSIDAD DE CÓRDOBA
                 </h3>
             </div>
@@ -135,12 +138,11 @@
                 </p>
                 <ul>
                     {% for comision in comisiones %}
-                    <li><p>{{comision[3].upper()}} desde el {{comision[1] | datetime}} hasta {% if not comision[2] %} la actualidad. {% else %} el {{comision[2] | datetime}}. {% endif %}</p></li>
+                    <li><p>{{comision[4].upper()}} desde el {{comision[1] | datetime}} hasta {% if not comision[2] %} la actualidad {% else %} el {{comision[2] | datetime}} {% endif %} {% if comision[3] %} (en calidad de {{comision[3].upper()}} de la Comisión) {% endif %}.</p></li>
                     {% endfor %}
                 </ul>
                 <p class="signature">
-                    Y, para que conste y surta los efectos oportunos, firmo el presente certificado
-                    en Córdoba, a {{fecha_actual | datetime}}.
+                    Y, para que conste y surta los efectos oportunos, firmo el presente certificado.
                 </p>
             </div>
         </div>

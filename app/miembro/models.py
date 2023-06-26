@@ -56,14 +56,6 @@ class Miembro(db.Model):
         UniqueConstraint("dni", name="uq_dni"),
     )
 
-    @validates("dni")
-    def validate_dni(self, key, value):
-        if not value:
-            raise ValueError("El DNI es requerido.")
-        if not re.match(r"^\d{8}[a-zA-Z]$", value):
-            raise ValueError("El DNI debe ser un número seguido de una letra.")
-        return value
-
     def __repr__(self):
         """
         Sobrecargamos el método __repr__ para representar como queramos los objetos

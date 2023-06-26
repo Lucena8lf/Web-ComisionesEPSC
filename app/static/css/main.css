@@ -377,3 +377,30 @@ div.members-comission input {
   position: relative;
   z-index: 1;
 }
+
+/* Título index */
+.animate-title
+{
+   text-transform: uppercase;
+  background-image: linear-gradient(
+    -225deg,
+    #4c5cc5 0%,
+    #00b299 29%,
+    #4c5cc5 67%,
+    #00b299 100%
+  );
+  background-size: auto auto;
+  background-clip: border-box;
+  background-size: 100% auto;
+  color: #fff;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textclip 2s linear infinite;
+}
+
+@keyframes textclip {
+  to {
+    background-position: 200% center;
+  }
+}

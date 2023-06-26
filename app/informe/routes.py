@@ -32,7 +32,7 @@ import csv
 
 from docx import Document
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
-from docx.shared import Inches
+from docx.shared import Inches, Pt
 from docx.enum.section import WD_SECTION
 
 from config.default import BASE_DIR
@@ -137,6 +137,7 @@ def informe_comisiones(secretario, fecha_inicio, fecha_fin, tratamiento, id_miem
             miembros_comisiones.columns.id_comision,
             miembros_comisiones.columns.fecha_incorporacion,
             miembros_comisiones.columns.fecha_baja,
+            miembros_comisiones.columns.cargo,
         ).where(
             miembros_comisiones.columns.id_miembro == id_miembro,
             miembros_comisiones.columns.fecha_incorporacion.between(
@@ -144,6 +145,14 @@ def informe_comisiones(secretario, fecha_inicio, fecha_fin, tratamiento, id_miem
             ),
         )
     ).fetchall()
+
+    # Si ese miembro no pertenece a ninguna comisión no generamos certificado
+    if not comisiones:
+        flash(
+            f"El miembro {miembro.nombre} {miembro.apellidos} no ha pertenecido a ninguna comisión en el rango de fechas indicado.",
+            "error",
+        )
+        return redirect(url_for("informe.generate_informe"))
 
     # Obtenemos el nombre de esas comisiones a partir de la ID
     # Primero obtenemos todas las ID de las comisiones de la lista anterior
@@ -154,13 +163,15 @@ def informe_comisiones(secretario, fecha_inicio, fecha_fin, tratamiento, id_miem
         .filter(Comision.id.in_(id_comisiones))
         .all()
     )
-    # Creamos una lista de tuplas con las comisiones, fechas y nombres utilizando map() para agregar el nombre de la comisión
+    # Creamos una lista de tuplas con las comisiones, fechas, cargos y nombres utilizando map() para agregar el nombre de la comisión
+    # comisiones_con_nombre -> (ID_comision, fecha_incorporacion, fecha_baja, cargo_miembro, nombre_comision)
     comisiones_con_nombre = list(
         map(
             lambda c: (
                 c[0],
                 c[1],
                 c[2],
+                c[3],
                 next((n[1] for n in nombres_comisiones if n[0] == c[0]), ""),
             ),
             comisiones,
@@ -172,7 +183,7 @@ def informe_comisiones(secretario, fecha_inicio, fecha_fin, tratamiento, id_miem
 
     # Borramos la comisión 'Junta de Escuela' si existe ya que no pertenece a este informe
     for tupla in comisiones_con_nombre:
-        if tupla[3] == "Junta de Escuela":
+        if tupla[4] == "Junta de Escuela":
             comisiones_con_nombre.remove(tupla)
 
     # Obtenemos el HTML
@@ -194,6 +205,9 @@ def informe_comisiones(secretario, fecha_inicio, fecha_fin, tratamiento, id_miem
         "margin-left": "1.0cm",
         "encoding": "UTF-8",
         "enable-local-file-access": "",
+        # "header-html": os.path.join(
+        #     BASE_DIR, "app", "informe", "templates", "informe", "headerPDF.html"
+        # ),
     }
 
     # Construimos el PDF a partir del HTML
@@ -222,7 +236,12 @@ def informe_escuela(secretario, fecha_inicio, fecha_fin, tratamiento, id_miembro
     id_comision = Comision.query.filter_by(nombre="Junta de Escuela").first().id
 
     if not id_comision:
-        return "Parece que la comisión 'Junta de Escuela' no se encuentra"
+        flash(
+            "Parece que la comisión 'Junta de Escuela' no se encuentra registrada en el sistema.",
+            "error",
+        )
+        return redirect(url_for("informe.generate_informe"))
+
     # Si este miembro está en esa comsión recuperamos sus fechas de incorporación y de baja
     # Ahora la fecha de incorporación no es necesario que esté entre los rangos que nos indica
     # Ahora nos es irrelevante las fechas que nos indique
@@ -238,7 +257,7 @@ def informe_escuela(secretario, fecha_inicio, fecha_fin, tratamiento, id_miembro
 
     if not comision:
         flash(
-            "Parece que este miembro no pertenece ni ha pertenecido nunca a la Junta de la Escuela",
+            f"Parece que el miembro {miembro.nombre} {miembro.apellidos} no ha pertenecido a la Junta de la Escuela en el rango de fechas indicado.",
             "error",
         )
         return redirect(url_for("informe.generate_informe"))
@@ -294,6 +313,7 @@ def informe_comisiones_docx(
             miembros_comisiones.columns.id_comision,
             miembros_comisiones.columns.fecha_incorporacion,
             miembros_comisiones.columns.fecha_baja,
+            miembros_comisiones.columns.cargo,
         ).where(
             miembros_comisiones.columns.id_miembro == id_miembro,
             miembros_comisiones.columns.fecha_incorporacion.between(
@@ -301,6 +321,14 @@ def informe_comisiones_docx(
             ),
         )
     ).fetchall()
+
+    # Si ese miembro no pertenece a ninguna comisión no generamos certificado
+    if not comisiones:
+        flash(
+            f"El miembro {miembro.nombre} {miembro.apellidos} no ha pertenecido a ninguna comisión en el rango de fechas indicado.",
+            "error",
+        )
+        return redirect(url_for("informe.generate_informe"))
 
     # Obtenemos el nombre de esas comisiones a partir de la ID
     # Primero obtenemos todas las ID de las comisiones de la lista anterior
@@ -318,6 +346,7 @@ def informe_comisiones_docx(
                 c[0],
                 c[1],
                 c[2],
+                c[3],
                 next((n[1] for n in nombres_comisiones if n[0] == c[0]), ""),
             ),
             comisiones,
@@ -346,18 +375,56 @@ def informe_comisiones_docx(
     core_properties.title = "Certificado de pertenencia a comisiones"
     core_properties.comments = ""
 
+    # Establecemos el estilo de fuente predeterminado para el documento
+    default_font = document.styles["Normal"].font
+    # default_font.name = "Arial"
+    default_font.size = Pt(12)
+
+    # --- #
     p = document.add_paragraph()
     run = p.add_run()
     run.add_picture(
         os.path.join(BASE_DIR, "app", "static", "images", "logotipo-EPSC.png"),
         width=Inches(3.25),
     )
+
+    # Ajustamos la posición de la imagen
+    p.paragraph_format.space_before = Pt(0)
+
     p.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+
+    # --- Logo EPSC como encabezado --- #
+    # Escogemos la sección más arriba de la página
+    # section = document.sections[0]
+
+    # Seleccionamos el header
+    # header = section.header
+
+    # Seleccionamos el párrafo que hay en la sección del header
+    # header_para = header.paragraphs[0]
+
+    # Añadimos el logo
+    # run = header_para.add_run()
+    # run.add_picture(
+    #    os.path.join(BASE_DIR, "app", "static", "images", "logotipo-EPSC.png"),
+    #    width=Inches(3.25),
+    # )
+
+    # Ajustar el espaciado antes del párrafo para reducir la distancia desde la parte superior
+    # header_para.paragraph_format.space_before = Pt(0)
+
+    # header_para.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+
+    # --- Logo EPSC como encabezado --- #
+
+    # --- #
 
     p = document.add_paragraph()
     p.add_run(
-        f"D. {secretario.upper()}, DE  LA  ESCUELA POLITÉCNICA SUPERIOR DE CÓRDOBA DE LA UNIVERSIDAD DE CÓRDOBA"
+        f"{secretario.upper()} DE  LA  ESCUELA POLITÉCNICA SUPERIOR DE CÓRDOBA DE LA UNIVERSIDAD DE CÓRDOBA"
     ).bold = True
+
+    p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
 
     p.add_run().add_break()
 
@@ -382,25 +449,40 @@ def informe_comisiones_docx(
     # Lista de comisiones
     for comision in comisiones:
         if not comision[2]:
-            p = document.add_paragraph(
-                f"{comision[3].upper()} desde el {comision[1].strftime('%d/%m/%Y')} hasta la actualidad.",
-                style="List Bullet",
-            )
+            if comision[3]:
+                p = document.add_paragraph(
+                    f"{comision[4].upper()} desde el {comision[1].strftime('%d/%m/%Y')} hasta la actualidad (en calidad de {comision[3].upper()} de la Comisión).",
+                    style="List Bullet",
+                )
+            else:
+                p = document.add_paragraph(
+                    f"{comision[4].upper()} desde el {comision[1].strftime('%d/%m/%Y')} hasta la actualidad.",
+                    style="List Bullet",
+                )
         else:
-            p = document.add_paragraph(
-                f"{comision[3].upper()} desde el {comision[1].strftime('%d/%m/%Y')} hasta el {comision[2].strftime('%d/%m/%Y')}.",
-                style="List Bullet",
-            )
+            if comision[3]:
+                p = document.add_paragraph(
+                    f"{comision[4].upper()} desde el {comision[1].strftime('%d/%m/%Y')} hasta el {comision[2].strftime('%d/%m/%Y')} (en calidad de {comision[3].upper()} de la Comisión).",
+                    style="List Bullet",
+                )
+            else:
+                p = document.add_paragraph(
+                    f"{comision[4].upper()} desde el {comision[1].strftime('%d/%m/%Y')} hasta el {comision[2].strftime('%d/%m/%Y')}.",
+                    style="List Bullet",
+                )
 
         p.add_run().add_break()
 
-    p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
+        p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
+
+        # La lista de comisiones tienen un punto menos de tamaño
+        p.style.font.size = Pt(11)
 
     document.add_page_break()
 
     p = document.add_paragraph()
     p.add_run(
-        f"Y, para que conste y surta los efectos oportunos, firmo el presente certificado en Córdoba, a {fecha_actual.strftime('%d/%m/%Y')}."
+        f"Y, para que conste y surta los efectos oportunos, firmo el presente certificado."
     )
     p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
     # Indentamos primera línea del párrafo
@@ -412,7 +494,7 @@ def informe_comisiones_docx(
     # Ajustamos el margen superior del párrafo
     paragraph_format = p.paragraph_format
     paragraph_format.space_before = Inches(
-        6.5
+        5
     )  # Ajustamos la altura de la página para que añadamos la imagen y se encuentre al final
     paragraph_format.left_indent = Inches(
         -1
@@ -449,7 +531,7 @@ def informe_comisiones_docx(
 @login_required
 def informe_escuela_docx(secretario, fecha_inicio, fecha_fin, tratamiento, id_miembro):
     """
-    Ruta que genera un informe de pertenencia a la junta de escuela de un miembro en formato 'pdf'
+    Ruta que genera un informe de pertenencia a la junta de escuela de un miembro en formato '.docx'
     """
     miembro = Miembro.get_by_id(id_miembro)
 
@@ -458,7 +540,11 @@ def informe_escuela_docx(secretario, fecha_inicio, fecha_fin, tratamiento, id_mi
     id_comision = Comision.query.filter_by(nombre="Junta de Escuela").first().id
 
     if not id_comision:
-        return "Parece que la comisión 'Junta de Escuela' no se encuentra"
+        flash(
+            "Parece que la comisión 'Junta de Escuela' no se encuentra registrada en el sistema.",
+            "error",
+        )
+        return redirect(url_for("informe.generate_informe"))
     # Si este miembro está en esa comsión recuperamos sus fechas de incorporación y de baja
     # Ahora la fecha de incorporación no es necesario que esté entre los rangos que nos indica
     # Ahora nos es irrelevante las fechas que nos indique
@@ -474,11 +560,10 @@ def informe_escuela_docx(secretario, fecha_inicio, fecha_fin, tratamiento, id_mi
 
     if not comision:
         flash(
-            "Parece que este miembro no pertenece ni ha pertenecido nunca a la Junta de la Escuela",
+            f"Parece que el miembro {miembro.nombre} {miembro.apellidos} no ha pertenecido a la Junta de la Escuela en el rango de fechas indicado.",
             "error",
         )
         return redirect(url_for("informe.generate_informe"))
-        # return "Parece que este miembro no pertenece ni ha pertenecido nunca a 'Junta de Escuela'"
 
     fecha_actual = datetime.datetime.now().date()
 
@@ -492,18 +577,51 @@ def informe_escuela_docx(secretario, fecha_inicio, fecha_fin, tratamiento, id_mi
     core_properties.title = "Certificado de pertenencia a la Junta de Escuela"
     core_properties.comments = ""
 
-    p = document.add_paragraph()
-    run = p.add_run()
-    run.add_picture(
+    # Establecemos el estilo de fuente predeterminado para el documento
+    default_font = document.styles["Normal"].font
+    # default_font.name = "Arial"
+    default_font.size = Pt(12)
+
+    # -- LOGO -- #
+    # p = document.add_paragraph()
+    # run = p.add_run()
+    # run.add_picture(
+    #    os.path.join(BASE_DIR, "app", "static", "images", "logotipo-EPSC.png"),
+    #    width=Inches(3.25),
+    # )
+    # p.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+
+    # Choosing the top most section of the page
+    section = document.sections[0]
+
+    # Selecting the header
+    header = section.header
+
+    # Selecting the paragraph already present in
+    # the header section
+    header_para = header.paragraphs[0]
+
+    # Adding the right zoned header
+    # header_para.text = "\t\tThis is Right Zoned Header..."
+    run = header_para.add_run()
+    picture = run.add_picture(
         os.path.join(BASE_DIR, "app", "static", "images", "logotipo-EPSC.png"),
         width=Inches(3.25),
     )
-    p.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+
+    # Ajustar el espaciado antes del párrafo para reducir la distancia desde la parte superior
+    header_para.paragraph_format.space_before = Pt(0)
+
+    header_para.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+
+    # -- LOGO -- #
 
     p = document.add_paragraph()
     p.add_run(
-        f"D. {secretario.upper()}, DE  LA  ESCUELA POLITÉCNICA SUPERIOR DE CÓRDOBA DE LA UNIVERSIDAD DE CÓRDOBA"
+        f"{secretario.upper()} DE  LA  ESCUELA POLITÉCNICA SUPERIOR DE CÓRDOBA DE LA UNIVERSIDAD DE CÓRDOBA"
     ).bold = True
+
+    p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
 
     p.add_run().add_break()
 
@@ -532,7 +650,7 @@ def informe_escuela_docx(secretario, fecha_inicio, fecha_fin, tratamiento, id_mi
 
     p = document.add_paragraph()
     p.add_run(
-        f"Y, para que conste y surta los efectos oportunos, firmo el presente certificado en Córdoba, a {fecha_actual.strftime('%d/%m/%Y')}."
+        f"Y, para que conste y surta los efectos oportunos, firmo el presente certificado."
     )
     p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
     # Indentamos primera línea del párrafo
@@ -544,7 +662,7 @@ def informe_escuela_docx(secretario, fecha_inicio, fecha_fin, tratamiento, id_mi
     # Ajustamos el margen superior del párrafo
     paragraph_format = p.paragraph_format
     paragraph_format.space_before = Inches(
-        2.3
+        2
     )  # Ajustamos la altura de la página para que añadamos la imagen y se encuentre al final
     paragraph_format.left_indent = Inches(
         -1
@@ -585,15 +703,15 @@ def export_csv():
     result = (
         db.session.query(
             Comision.nombre,
-            Comision.comentarios,
-            Miembro.dni,
             Miembro.apellidos,
             Miembro.nombre,
+            Miembro.dni,
             Miembro.tipo,
             miembros_comisiones.c.fecha_incorporacion,
             miembros_comisiones.c.fecha_baja,
             miembros_comisiones.c.motivo_baja,
             miembros_comisiones.c.cargo,
+            Comision.comentarios,
         )
         .join(Miembro, miembros_comisiones.c.id_miembro == Miembro.id)
         .join(Comision, miembros_comisiones.c.id_comision == Comision.id)
@@ -607,15 +725,15 @@ def export_csv():
     # Insertamos las columnas
     header = [
         "Comisión",
-        "Comentarios",
-        "DNI",
         "Apellidos",
         "Nombre",
+        "DNI",
         "Tipo",
         "Fecha de incorporación",
         "Fecha de baja",
-        "Motivo",
+        "Motivo de baja",
         "Cargo en la comisión",
+        "Comentarios",
     ]
     writer.writerow(header)
 
