@@ -429,7 +429,7 @@ def informe_comisiones_docx(
     p.add_run().add_break()
 
     p = document.add_paragraph()
-    p.add_run("CERTIFICA").bold = True
+    p.add_run("CERTIFICA:").bold = True
     p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
 
     p = document.add_paragraph("Que ")
@@ -604,7 +604,7 @@ def informe_escuela_docx(secretario, fecha_inicio, fecha_fin, tratamiento, id_mi
     # Adding the right zoned header
     # header_para.text = "\t\tThis is Right Zoned Header..."
     run = header_para.add_run()
-    picture = run.add_picture(
+    run.add_picture(
         os.path.join(BASE_DIR, "app", "static", "images", "logotipo-EPSC.png"),
         width=Inches(3.25),
     )
@@ -626,7 +626,7 @@ def informe_escuela_docx(secretario, fecha_inicio, fecha_fin, tratamiento, id_mi
     p.add_run().add_break()
 
     p = document.add_paragraph()
-    p.add_run("CERTIFICA").bold = True
+    p.add_run("CERTIFICA:").bold = True
     p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
 
     p = document.add_paragraph("Que ")
